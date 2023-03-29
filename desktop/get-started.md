@@ -121,3 +121,5 @@ docker.io/molly/privateimage:latest
 - [Explore Docker Desktop](use-desktop/index.md) and its features. 
 - Change your Docker Desktop settings
 - [Browse common FAQs](faqs/general.md)
+- Explore more guides and learning resources by selecting **Learning Center** in Docker Desktop
+
