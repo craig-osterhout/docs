@@ -196,6 +196,9 @@ For example uses of this command, refer to the [examples section](#examples) bel
 
 {% unless controller_data.pname == "docker" or controller_data.pname == "dockerd" or include.datafile=="docker" %}
 
+
+{% if site.data[include.datafolder][parentdatafile].cname.size > 1 %}
+
 ## Related commands
 
 <table>
@@ -215,5 +218,7 @@ For example uses of this command, refer to the [examples section](#examples) bel
 {% endfor %}
 </tbody>
 </table>
+
+{% endif %}
 
 {% endunless %}
