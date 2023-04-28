@@ -17,3 +17,4 @@ services:
     pull_policy: never
     ports:
      - "4000:4000"
+     - "443:443"

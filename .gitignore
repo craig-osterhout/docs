@@ -11,3 +11,5 @@ _kbase/**
 /vendor
 /lint
 tmp/.htmltest/**
+cert.pem
+key.pem
