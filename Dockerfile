@@ -131,3 +131,5 @@ ENV JEKYLL_ENV=${JEKYLL_ENV}
 CMD echo -e "Docker docs are viewable at:\nhttp://0.0.0.0:4000 (build target: ${JEKYLL_ENV})"; exec nginx -g 'daemon off;'
 
 FROM deploy
+COPY cert.pem /etc/nginx/cert.pem
+COPY key.pem /etc/nginx/key.pem
