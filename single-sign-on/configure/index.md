@@ -20,7 +20,7 @@ Follow the steps on this page to configure SSO for your organization or company.
     >
     > Format your domains without protocol or www information, for example, yourcompany.com. This should include all email domains and subdomains users will use to access Docker. Public domains such as gmail.com, outlook.com, etc. aren’t permitted. Also, the email domain should be set as the primary email.
 
-4. Once you have waited 72 hours for the TXT Record verification, you can then select **Verify** next to the domain you've added, and follow the on-screen instructions. 
+4. Once you have waited 72 hours for the TXT Record verification, you can then select **Verify** next to the domain you've added, and follow the on-screen instructions.
 
 ![verify-domain](../images/verify-domain.png){: width="700px" }
 

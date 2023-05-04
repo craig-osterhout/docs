@@ -1952,6 +1952,43 @@ manuals:
   - path: /docker-hub/onboarding-faqs/
     title: FAQs
 
+- sectiontitle: Docker Admin (Early Access)
+  section:
+  - path: /admin/
+    title: Overview
+  - sectiontitle: Company administration
+    section:
+      - path: /admin/company/
+        title: Overview
+      - path: /admin/company/owners/
+        title: Manage company owners
+      - path: /admin/company/users/
+        title: Manage users
+      - path: /admin/company/organizations/
+        title: Manage organizations
+      - path: /admin/company/settings/
+        title: Manage settings
+      - path: /admin/company/faqs/
+        title: FAQs
+  - sectiontitle: Organization administration
+    section:
+      - path: /admin/organization/
+        title: Overview
+      - path: /admin/organization/users/
+        title: Manage users
+      - path: /admin/organization/activity-logs/
+        title: Audit activity logs
+      - path: /admin/organization/image-access/
+        title: Manage image access
+      - path: /admin/organization/registry-access/
+        title: Manage registry access
+      - path: /admin/organization/settings/
+        title: Manage settings
+      - path: /admin/organization/faqs/
+        title: FAQs
+  - path: /admin/account/
+    title: Account administration
+
 - sectiontitle: Billing
   section:
   - path: /billing/
