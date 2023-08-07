@@ -1,0 +1,11 @@
+product: "[Docker Admin](https://admin.docker.com)"
+
+users:
+  navigation: Select your company in the left navigation drop-down menu, and then select **Users**.
+  update_role: "Select their organization, select the role you want to assign, and then select **Save**."
+  invite: "**Invite**"
+  export: "the **Action** icon and then select **Export users as CSV**"
+  remove: "**Remove user**"
+
+group_mapping:
+  scim_link: "[Enable SCIM](/admin/company/settings/scim/)"

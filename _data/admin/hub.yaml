@@ -1,0 +1,10 @@
+product: "[Docker Hub](https://hub.docker.com)"
+users:
+  navigation: "Select **Organizations**, your organization, and then **Members**."
+  update_role: "Select the role you want to assign, then select **Save**."
+  invite: "**Invite members**"
+  export: "**Export members**"
+  remove: "**Remove member**"
+
+group_mapping:
+  scim_link: "[Enable SCIM](/docker-hub/scim/)"

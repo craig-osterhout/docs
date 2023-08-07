@@ -2,11 +2,13 @@
 description: Manage organization members
 keywords: members, teams, organizations
 title: Manage members
+datafolder: admin
+datafile: hub
 ---
 
 This section describes how to manage members in your [teams and organizations](../docker-hub/orgs.md).
 
-{% include admin-users.md product="hub" %}
+{% include admin-users.md datafolder=page.datafolder datafile=page.datafile %}
 
 ## Add a member to a team
 

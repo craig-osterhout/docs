@@ -1,12 +1,4 @@
-{% if include.product == "admin" %}
-  {% if include.layer == "company" %}
-    {% assign scim_link = "[Enable SCIM](/admin/company/settings/scim/)" %}
-  {% else %}
-    {% assign scim_link = "[Enable SCIM](/admin/organization/security-settings/scim/)" %}
-  {% endif %}
-{% else %}
-  {% assign scim_link = "[Enable SCIM](/docker-hub/scim/)" %}
-{% endif %}
+{% assign variables = site.data[include.datafolder][include.datafile] %}
 
 With directory group-to-team provisioning from your IdP, user updates will automatically sync with your Docker organizations and teams.
 
@@ -52,5 +44,5 @@ Once complete, a user who signs in to Docker through SSO is automatically added 
 
 >**Tip**
 >
-> {{ scim_link }} to take advantage of automatic user provisioning and de-provisioning. If you don't enable SCIM users are only automatically provisioned. You have to de-provision them manually.
+> {{ variables.group_mapping.scim_link }} to take advantage of automatic user provisioning and de-provisioning. If you don't enable SCIM users are only automatically provisioned. You have to de-provision them manually.
 {: .tip}

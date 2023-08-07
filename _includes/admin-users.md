@@ -1,25 +1,5 @@
+{% assign variables = site.data[include.datafolder][include.datafile] %}
 
-{% if include.product == "admin" %}
-  {% assign product_link="[Docker Admin](https://admin.docker.com)" %}
-  {% assign invite_button = "**Invite**" %}
-  {% assign export_button = "the **Action** icon and then select **Export users as CSV**" %}
-  {% if include.layer == "company" %}
-    {% assign member_navigation="Select your company in the left navigation drop-down menu, and then select **Users**." %}
-    {% assign remove_button = "**Remove user**" %}
-    {% assign update_role = "Select their organization, select the role you want to assign, and then select **Save**." %}
-  {% else %}
-    {% assign member_navigation="Select your organization in the left navigation drop-down menu, and then select **Members**." %}
-    {% assign remove_button = "**Remove member**" %}
-    {% assign update_role = "Select the role you want to assign, then select **Save**." %}
-  {% endif %}
-{% else %}
-  {% assign product_link="[Docker Hub](https://hub.docker.com)" %}
-  {% assign member_navigation="Select **Organizations**, your organization, and then **Members**." %}
-  {% assign invite_button = "**Invite members**" %}
-  {% assign remove_button = "**Remove member**" %}
-  {% assign export_button = "**Export members**" %}
-  {% assign update_role = "Select the role you want to assign, then select **Save**." %}
-{% endif %}
 
 ## Invite members
 
@@ -29,9 +9,9 @@ Owners can invite new members to an organization via Docker ID, email address, o
 
 Use the following steps to invite members to your organization via Docker ID or email address. To invite a large amount of members to your organization via CSV file, see the next section.
 
-1. Sign in to {{ product_link }}{: target="_blank" rel="noopener" class="_"}.
-2. {{ member_navigation }}
-3. Select {{ invite_button }}.
+1. Sign in to {{ variables.product }}{: target="_blank" rel="noopener" class="_"}.
+2. {{ variables.users.navigation }}
+3. Select {{ variables.users.invite }}.
 4. Select **Emails or usernames**.
 5. Follow the on-screen instructions to invite members. Invite a maximum of 1000 members and separate multiple entries by comma, semicolon, or space.
 
@@ -45,9 +25,9 @@ Pending invitations appear in the table. The invitees receive an email with a li
 
 To invite multiple members to an organization via a CSV file containing email addresses:
 
-1. Sign in to {{ product_link }}{: target="_blank" rel="noopener" class="_"}.
-2. {{ member_navigation }}
-3. Select {{ invite_button }}.
+1. Sign in to {{ variables.product }}{: target="_blank" rel="noopener" class="_"}.
+2. {{ variables.users.navigation }}
+3. Select {{  variables.users.invite }}.
 4. Select **CSV upload**.
 5. Select **Download the template CSV file** to optionally download an example CSV file. The following is an example of the contents of a valid CSV file.
     ```
@@ -85,8 +65,8 @@ Pending invitations appear in the table. The invitees receive an email with a li
 
 To resend an invitation if the invite is pending or declined:
 
-1. Sign in to {{ product_link }}{: target="_blank" rel="noopener" class="_"}.
-2. {{ member_navigation }}
+1. Sign in to {{ variables.product }}{: target="_blank" rel="noopener" class="_"}.
+2. {{  variables.users.navigation }}
 3. In the table, locate the invitee, select the **Action** icon, and then select **Resend invitation**.
 4. Select **Invite** to confirm.
 
@@ -94,9 +74,9 @@ To resend an invitation if the invite is pending or declined:
 
 To remove a member from an organization:
 
-1. Sign in to {{ product_link }}{: target="_blank" rel="noopener" class="_"}.
-2. {{ member_navigation }}
-3. In the table, select the **Action** icon, and then select {{  remove_button  }} or **Remove invitee**.
+1. Sign in to {{ variables.product }}{: target="_blank" rel="noopener" class="_"}.
+2. {{ variables.users.navigation }}
+3. In the table, select the **Action** icon, and then select {{   variables.users.remove }} or **Remove invitee**.
 4. Follow the on-screen instructions to remove the member or invitee.
 
 ## Update a member role
@@ -109,11 +89,11 @@ Organization owners can manage [roles](/docker-hub/roles-and-permissions/) withi
 
 To update a member role:
 
-1. Sign in to {{ product_link }}{: target="_blank" rel="noopener" class="_"}.
-2. {{ member_navigation }}
+1. Sign in to {{ variables.product }}{: target="_blank" rel="noopener" class="_"}.
+2. {{  variables.users.navigation }}
 3. Find the username of the member whose role you want to edit. In the table, select the **Actions** icon.
 4. Select **Edit role**.
-5. {{ update_role }}
+5. {{  variables.users.update_role }}
 
 ## Export members
 
@@ -133,6 +113,6 @@ The CSV file may contain the following fields:
 
 To export a CSV file of the members:
 
-1. Sign in to {{ product_link }}{: target="_blank" rel="noopener" class="_"}.
-2. {{ member_navigation }}
-3. Select {{ export_button }}.
+1. Sign in to {{ variables.product }}{: target="_blank" rel="noopener" class="_"}.
+2. {{  variables.users.navigation }}
+3. Select {{ variables.users.export }}.
