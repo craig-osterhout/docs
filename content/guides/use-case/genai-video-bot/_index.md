@@ -2,6 +2,7 @@
 description: Explore a generative AI video analysis app that uses Docker, OpenAI, and Pinecone.
 keywords:  python, generative ai, genai, llm, whisper, pinecone, openai, whisper
 title: GenAI video transcription and chat
+layout: "drilldown"
 ---
 
 ## Overview

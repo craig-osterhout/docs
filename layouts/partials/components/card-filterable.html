@@ -1,0 +1,115 @@
+{{/* Check for both image and icon, throw error if both exist */}}
+{{ if (and .image .icon) }}
+  {{ errorf "filterable-card: don't use both image and icon: %s" . }}
+{{ end }}
+
+{{ if (and .tags) }}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var cardFilter = document.getElementById('cardFilter');
+    var noResultsMessage = document.getElementById('noResults'); // Get the no-results message element
+
+    if (cardFilter) {
+        cardFilter.addEventListener('keyup', function() {
+            var value = this.value.toLowerCase();
+            var cards = document.querySelectorAll('.filterable-card');
+            var anyCardVisible = false; // Flag to track if any card is visible
+
+            cards.forEach(function(card) {
+                var title = card.getAttribute('data-title').toLowerCase();
+                var tags = card.getAttribute('data-tags').toLowerCase().split(" ");
+                var titleMatch = title.includes(value);
+                var tagMatch = tags.some(tag => tag.includes(value));
+                var isVisible = titleMatch || tagMatch;
+                card.style.display = isVisible ? '' : 'none';
+
+                if (isVisible) {
+                    anyCardVisible = true; // At least one card is visible
+                }
+            });
+
+            // Show or hide the no-results message
+            noResultsMessage.classList.toggle('hidden', anyCardVisible);
+        });
+    }
+});
+
+</script>
+{{ end }}
+
+{{/* Card container with data attributes for filtering */}}
+<div class="not-prose overflow-x-hidden drop-shadow bg-white rounded
+             border border-gray-light-100 dark:bg-gray-dark-200 dark:border-gray-dark-400
+             {{ if .link }}hover:border-gray-light-200 hover:dark:border-gray-dark{{ end }}
+             filterable-card"
+     data-title="{{ lower .title }}"t
+     data-tags="{{ delimit (apply (split .tags ",") "lower" "." ) " " }}">
+
+  {{/* Card link */}}
+  {{ if .link }}
+    <a href="{{ .link }}">
+  {{ end }}
+
+  {{/* Image layout */}}
+  {{ if .image }}
+    <div class="flex gap-2 items-stretch">
+      <div class="basis-1/3">
+        <img class="h-full w-full object-cover" src="{{ .image }}" alt="">
+      </div>
+      <div class="basis-2/3 flex flex-col gap-2 p-4">
+        <div class="text-xl text-gray-light-800 leading-snug dark:text-white flex gap-2">
+          {{ markdownify .title }}
+        </div>
+        <div class="text-gray-light-500 leading-snug dark:text-gray-dark-700">
+          {{ .description | markdownify }}
+        </div>
+        {{/* Tags section */}}
+        {{ if .tags }}
+          <div class="flex flex-wrap gap-2">
+            {{ range $tag := split .tags "," }}
+            {{ partial "components/badge.html" (dict "color" "amber" "content" $tag) }}
+
+            {{ end }}
+          </div>
+        {{ end }}
+      </div>
+    </div>
+  {{ else }}
+    {{/* Default layout with icon or ligature */}}
+    <div class="flex flex-col gap-2 p-4">
+      <div class="flex gap-4 items-center">
+        {{ with .icon }}
+          {{/* Icon image or ligature */}}
+          {{ if strings.ContainsAny . "/." }}
+            <img class="w-[32px] invertible" src="{{ . }}" alt="">
+          {{ else }}
+            <span class="icon-svg">{{ partial "icon" . }}</span>
+          {{ end }}
+        {{ end }}
+        <div>
+          <div class="text-xl text-gray-light-800 leading-snug dark:text-white flex items-center gap-2">
+            {{ markdownify .title }}
+          </div>
+        </div>
+      </div>
+      <div class="text-gray-light-600 leading-snug dark:text-gray-dark-700">
+        {{ .description | markdownify }}
+      </div>
+  
+      {{/* Tags section */}}
+      {{ if .tags }}
+        <div class="card-tags flex flex-wrap gap-2">
+          {{ range $tag := split .tags "," }}
+          {{ partial "components/badge.html" (dict "color" "amber" "content" $tag) }}
+
+          {{ end }}
+        </div>
+      {{ end }}
+    </div>
+  {{ end }}
+
+  {{/* Close link tag if .link is set */}}
+  {{ if .link }}
+    </a>
+  {{ end }}
+</div>
