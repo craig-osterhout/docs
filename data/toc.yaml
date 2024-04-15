@@ -1093,9 +1093,12 @@ Samples:
 Manuals:
 - path: /manuals/
   title: Overview
+  icon: pageview
 - title: Get Docker
   path: /get-docker/
+  icon: download
 - sectiontitle: Docker Desktop
+  icon: /assets/icons/Whale.svg
   section:
     - path: /desktop/
       title: Overview

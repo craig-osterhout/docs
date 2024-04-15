@@ -43,33 +43,52 @@
 {{ $expanded := in $sections .entry.sectiontitle }}
 {{/* .entry is a section */}}
 <li>
-  {{/* See event handler in assets/js/src/sidebar.js */}}
-  <button class="rounded px-4 sidebar-hover w-full flex items-center justify-between">
-    <span class="py-2 truncate flex items-center gap-2">
-      {{ markdownify .entry.sectiontitle }}
-    </span>
-    <span class="icon-svg {{ if $expanded }}hidden{{ end }}">
-      {{ partialCached "icon" "expand_more" "expand_more" }}
-    </span>
-    <span class="icon-svg {{ if not $expanded }}hidden{{ end }}">
-      {{ partialCached "icon" "expand_less" "expand_less" }}
-    </span>
+  <button class="rounded px-4 sidebar-hover w-full flex items-center justify-between" style="align-items: center; padding-top: 2px; padding-bottom: 2px;">
+
+    <div style="display: flex; align-items: center;">
+      {{ with .entry.icon }}
+        {{ if strings.Contains . "/" }}
+          <img src="{{ . }}" alt="icon" style="width: 24px; height: 24px; margin-right: 8px;">
+        {{ else }}
+          <span class="material-icons" style="width: 24px; height: 24px; margin-right: 8px;">{{ . }}</span>
+        {{ end }}
+      {{ end }}
+      <span style="flex-grow: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: 0px;">
+        {{ markdownify .entry.sectiontitle }}
+      </span>
+    </div>
+    <div>
+      <span class="icon-svg {{ if $expanded }}hidden{{ end }}" style="flex-shrink: 0;">
+        {{ partialCached "icon" "expand_more" "expand_more" }}
+      </span>
+      <span class="icon-svg {{ if not $expanded }}hidden{{ end }}" style="flex-shrink: 0;">
+        {{ partialCached "icon" "expand_less" "expand_less" }}
+      </span>
+    </div>
   </button>
-  <ul class="{{if not $expanded}}hidden {{end}}ml-3 md:ml-[21px]">
+  <ul class="{{if not $expanded}}hidden {{end}}ml-3 md:ml-[21px]" style="padding-left: 32px;">  <!-- Adjust this value to align with parent text -->
     {{ range .entry.section }}
-    {{ template "tocRender" (dict "entry" . "ctx" $ctx "sections" $sections ) }}
+    {{ template "tocRender" (dict "entry" . "ctx" $ctx "sections" $sections) }}
     {{ end }}
   </ul>
 </li>
 {{ else }}
 {{/* .entry is a page */}}
 {{ $isCurrent := eq (urls.Parse $ctx.Permalink).Path .entry.path }}
-<li class="pl-4 sidebar-hover rounded
-  {{ if $isCurrent }} bg-gray-light-200 dark:bg-gray-dark-200{{ end }}">
-  <a {{ if $isCurrent }}aria-current="page" {{ end }} class="py-2 w-full truncate block"
-      href="{{ .entry.path }}" title="{{ markdownify .entry.title }}"
-      ><span class="flex items-center gap-2">{{ markdownify .entry.title }}</span>
+<li class="pl-4 sidebar-hover rounded {{ if $isCurrent }} bg-gray-light-200 dark:bg-gray-dark-200{{ end }}">
+  <a {{ if $isCurrent }}aria-current="page" {{ end }} class="py-2 w-full truncate block" href="{{ .entry.path }}" title="{{ markdownify .entry.title }}">
+    <span class="flex items-center gap-2">
+      {{ with .entry.icon }} <!-- Check if an icon is specified -->
+        {{ if strings.Contains . "/" }} <!-- It's a path, so render an image -->
+          <img src="{{ . }}" alt="icon" class="icon-img mr-2" style="width: 24px; height: 24px;">
+        {{ else }} <!-- It's a MaterialUI icon, so render a span -->
+        <span class="icon-svg"  style="width: 24px; height: 24px;">{{ partial "icon" . }}</span>
+        {{ end }}
+      {{ end }}
+      {{ markdownify .entry.title }} <!-- The page title -->
+    </span>
   </a>
 </li>
+
 {{ end }}
 {{ end }}
