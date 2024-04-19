@@ -1,4 +1,6 @@
 Guides:
+- title: Overview
+  path: /guides/
 - title: Docker overview
   path: /get-started/overview/
 - sectiontitle: Get started
@@ -90,18 +92,6 @@ Guides:
       path: /language/python/configure-ci-cd/
     - title: "Test your deployment"
       path: /language/python/deploy/
-  - sectiontitle: R
-    section:
-    - title: "Overview"
-      path: /language/r/
-    - title: "Containerize your app"
-      path: /language/r/containerize/
-    - title: "Develop your app"
-      path: /language/r/develop/
-    - title: "Configure CI/CD"
-      path: /language/r/configure-ci-cd/
-    - title: "Test your deployment"
-      path: /language/r/deploy/
   - sectiontitle: Java
     section:
     - title: "Overview"
@@ -696,8 +686,6 @@ Reference:
       title: docker scout integration list
     - path: /reference/cli/docker/scout/policy/
       title: docker scout policy
-    - path: /reference/cli/docker/scout/push/
-      title: docker scout push
     - path: /reference/cli/docker/scout/quickview/
       title: docker scout quickview
     - path: /reference/cli/docker/scout/recommendations/
@@ -1113,28 +1101,28 @@ Manuals:
   section:
     - path: /desktop/
       title: Overview
-    - sectiontitle: Install 
+    - sectiontitle: Install Docker Desktop
       section:
        - path: /desktop/install/mac-install/
-         title: Mac
+         title: Install on Mac
        - path: /desktop/mac/permission-requirements/
          title: Understand permission requirements for Mac
        - path: /desktop/install/windows-install/
-         title: Windows
+         title: Install on Windows
        - path: /desktop/windows/permission-requirements/
          title: Understand permission requirements for Windows
        - path: /desktop/install/linux-install/
-         title: Linux
+         title: Install on Linux
        - sectiontitle: Installation per Linux distro
          section:
             - path: /desktop/install/ubuntu/
-              title: Ubuntu
+              title: Install on Ubuntu
             - path: /desktop/install/debian/
-              title: Debian
+              title: Install on Debian
             - path: /desktop/install/fedora/
-              title: Fedora
+              title: Install on Fedora
             - path: /desktop/install/archlinux/
-              title: Arch
+              title: Install on Arch
     - path: /desktop/get-started/
       title: Sign in
     - sectiontitle: Explore Docker Desktop
@@ -1261,7 +1249,7 @@ Manuals:
 - sectiontitle: Docker Extensions
   section:
     - path: /desktop/extensions/
-      title: Overview
+      title: What are Docker Extensions?
     - sectiontitle: Extensions on Docker Desktop
       section:
         - path: /desktop/extensions/marketplace/
@@ -1987,7 +1975,7 @@ Manuals:
   - path: /compose/compose-application-model/
     title: How Compose works
   - path: /compose/gettingstarted/
-    title: Quickstart
+    title: Try Compose
   - path: /compose/project-name/
     title: Specify a project name
   - sectiontitle: Environment variables
@@ -2055,8 +2043,6 @@ Manuals:
         title: Access
       - path: /docker-hub/repos/
         title: Manage
-      - path: /docker-hub/repos/categories/
-        title: Categories
   - path: /docker-hub/download-rate-limit/
     title: Download rate limit
   - path: /docker-hub/webhooks/
@@ -2226,14 +2212,8 @@ Manuals:
   section:
   - path: /trusted-content/
     title: Overview
-  - sectiontitle: Docker Official Images
-    section:
-    - path: /trusted-content/official-images/
-      title: Overview
-    - path: /trusted-content/official-images/using/
-      title: Using official images
-    - path: /trusted-content/official-images/contributing/
-      title: Contributing
+  - path: /trusted-content/official-images/
+    title: Docker Official images
   - path: /trusted-content/dvp-program/
     title: Docker Verified Publisher Program
   - path: /trusted-content/dsos-program/
