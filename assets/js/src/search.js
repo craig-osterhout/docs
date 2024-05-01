@@ -18,6 +18,8 @@ async function initializeIndex() {
       { name: "keywords", weight: 1 },
       { name: "tags", weight: 1 },
     ],
+    useExtendedSearch: true, // Enable extended search features
+
     minMatchCharLength: 2,
     threshold: 0.2,
   };
