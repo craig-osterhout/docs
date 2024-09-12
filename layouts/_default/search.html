@@ -45,7 +45,6 @@
       // Get the query parameter from the URL
       const urlParams = new URLSearchParams(window.location.search);
       const query = urlParams.get("q");
-      const page = urlParams.get("page");
 
       // If no query parameter is set, return
       if (!query) {
@@ -57,7 +56,13 @@
       // Set the value of the input field to the query parameter
       searchInput.value = query;
 
-      onPageSearch({ target: searchInput }, page);
+      // Trigger the input event to simulate user typing
+      const event = new Event("input", {
+        bubbles: true,
+        cancelable: true,
+      });
+      // Trigger the input event for the search input
+      searchInput.dispatchEvent(event);
       searchInput.focus();
     });
 
@@ -65,71 +70,93 @@
     const searchPageResults = document.querySelector("#search-page-results");
 
     // onPageSearch returns 10 results per query
-    async function onPageSearch(e, pageNumber = 1) {
+    async function onPageSearch(e) {
       pagefind.init();
       const query = e.target.value;
+
       // Set the query parameter in the URL
       const params = new URLSearchParams(document.location.search);
       params.set("q", query);
-      params.set("page", pageNumber);  // Update the page parameter in the URL
-      // Default the current page to 1 or use the passed pageNumber
-      let currentPage = pageNumber ? parseInt(pageNumber) : 1;
-      // Calculate the range start based on the current page
+
+      // Default the current page to 1
+      let currentPage = 1;
+
+      // Check if the page parameter exists
+      const page = params.get("page");
+      // Calculate the range start based on the page parameter
+      if (page) {
+        currentPage = parseInt(page);
+      }
       const rangeStart = (currentPage - 1) * 10;
       const rangeEnd = rangeStart + 10;
+
       // Execute the search
       const search = await pagefind.debouncedSearch(query);
+      // If no search results are found, exit
       if (search === null) {
         return;
       } else {
+        // total number of results
         const resultsLength = search.results.length;
+        // Get the data for the search results
+        // Slice the results based on the range start + 10
         const resultsData = await Promise.all(
           search.results.slice(rangeStart, rangeEnd).map((r) => r.data()),
         );
+        // If the range does not have any results, display a message
         if (resultsData.length === 0) {
-          searchPageResults.innerHTML = `<div class="p-4">No results found<div>`;
+          searchPageResults.innerHTML = `<div class="p-4">No results found</div>`;
           return;
         }
+        // Add an index to the results, for heap tracking
         const results = resultsData.map((item, index) => ({
           ...item,
           index: index + 1,
         }));
+
+        // If the query is not empty, display the search results container
         if (query) {
           searchPageResults.classList.remove("hidden");
         } else {
           searchPageResults.classList.add("hidden");
         }
-        let resultsHTML = `<div class="text-gray-light dark:text-gray-darkp-2">${resultsLength} results</div>`;
-        resultsHTML += results.map((item) => {
-          return `<div class="p-4">
-          <div class="flex flex-col">
-            <span class="text-gray-light dark:texty-gray-dark text-sm">${itemmeta.breadcrumbs}</span>
-            <a class="link" href="${item.url}" data-query="${query}"data-index="${item.index}">${item.meta.title}</a>
-            <p class="text-black dark:text-white overflow-hidden">…${itemexcerpt}…</p>
-          </div>
-        </div>`;
-        }).join("");
+
+        // Generate the search results HTML
+        let resultsHTML = `<div class="text-gray-light dark:text-gray-dark p-2">${resultsLength} results</div>`;
+
+        // Map results to HTML
+        resultsHTML += results
+          .map((item) => {
+            return `<div class="p-4">
+         <div class="flex flex-col">
+           <span class="text-gray-light dark:texty-gray-dark text-sm">${item.meta.breadcrumbs}</span>
+           <a class="link" href="${item.url}" data-query="${query}" data-index="${item.index}">${item.meta.title}</a>
+           <p class="text-black dark:text-white overflow-hidden">…${item.excerpt}…</p>
+         </div>
+       </div>`;
+          })
+          .join("");
+        // If the results length is greater than 10, display links to show more results
         if (resultsLength > 10) {
-          resultsHTML += `<hr class="border-divider-lightdark:border-divider-dark">`;
-          resultsHTML += `<ul class="flex flex-wrap gap-1 pt-4 pb-8justify-center text-sm">`;
-          for (let i = 1; i <= Math.ceil(resultsLength / 10); i++) {
+          resultsHTML += `<hr class="border-divider-light dark:border-divider-dark">`
+          resultsHTML += `<ul class="flex flex-wrap gap-1 pt-4 pb-8 justify-center text-sm">`;
+          for (let i = 1; i <= resultsLength / 10; i++) {
             if (i == currentPage) {
               resultsHTML += `<li class="text-center text-white">
-              <a href="?q=${query}&page=${i}" class="block h-6 w-6 rounded-smbg-blue-light dark:bg-blue-dark">${i}</a>
-            </li>`;
+                <a href="{{ site.BaseURL }}search?q=${query}&page=${i}" class="block h-6 w-6 rounded-sm bg-blue-light dark:bg-blue-dark">${i}</a>
+              </li>`;
             } else {
-              resultsHTML += `<li class="text-center text-gray-lightdark:text-gray-dark">
-              <a href="?q=${query}&page=${i}" class="block h-6 w-6 rounded-smbg-gray-light-200 dark:bg-gray-dark-200">${i}</a>
-            </li>`;
+              resultsHTML += `<li class="text-center text-gray-light dark:text-gray-dark">
+                <a href="{{ site.BaseURL }}search?q=${query}&page=${i}" class="block h-6 w-6 rounded-sm bg-gray-light-200 dark:bg-gray-dark-200">${i}</a>
+              </li>`;
             }
           }
           resultsHTML += `</ul>`;
         }
+
         searchPageResults.innerHTML = resultsHTML;
       }
     }
-
-
 
     searchPageInput.addEventListener("input", (e) => onPageSearch(e));
 
