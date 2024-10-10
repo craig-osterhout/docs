@@ -15,7 +15,7 @@ You can scale consumption for the following:
 
 ## Add Build Cloud minutes
 
-You can pre-purchase build minutes either through self-serve or by [contacting sales](https://www.docker.com/pricing/contact-sales/). There is no coverage or on-demand option available.
+You can pre-purchase build minutes either through self-serve or by [contacting sales](https://www.docker.com/pricing/contact-sales/). There is no overage or on-demand option available.
 
 To add Docker Build Cloud minutes via self-serve:
 
@@ -27,6 +27,8 @@ To add Docker Build Cloud minutes via self-serve:
  You can pre-purchase minutes by [contacting sales](https://www.docker.com/pricing/contact-sales/) only. In addition to pre-purchase, you are able to use as many minutes as you need on-demand. The usage will be billed at the end of each monthly billing cycle.
 
 ## Add Docker Hub storage or image pulls
+
+{{< include "hub-limits.md" >}}
 
 You can view your [Docker Hub usage](../docker-hub/download-rate-limit.md#view-docker-hub-usage) to estimate your future resource needs.
 

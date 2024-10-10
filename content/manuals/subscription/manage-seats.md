@@ -9,7 +9,7 @@ aliases:
 - /docker-hub/billing/remove-seats/
 - /subscription/remove-seats/
 - /subscription/core-subscription/add-seats/
-- - /subscription/core-subscription/remove-seats/
+- /subscription/core-subscription/remove-seats/
 weight: 20
 ---
 

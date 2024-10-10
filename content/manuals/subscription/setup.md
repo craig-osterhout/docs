@@ -17,7 +17,7 @@ In this section, learn how to get started with a Docker subscription for individ
 2. Select your avatar in the top-right corner then select **Billing**.
 3. In **Billing Details**, select your personal account.
 4. Select **Buy now**.
-5. To continue to use [**Docker Core Personal**](/manuals/subscription/details.md#docker-personal), select **Continue with Personal**. To buy [**Docker Core Pro**](/manuals/subscription//details.md#docker-pro), select **Buy Now** on the **Pro** card.
+5. To continue to use [**Docker Personal**](/manuals/subscription/details.md#docker-personal), select **Continue with Personal**. To buy [**Docker Pro**](/manuals/subscription//details.md#docker-pro), select **Buy Now** on the **Pro** card.
 6. Enter your billing information, then select **Submit**.
 7. Follow the on-screen instructions to confirm monthly or annual billing cycle and enter your payment information.
 8. Select **Subscribe**.

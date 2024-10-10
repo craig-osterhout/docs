@@ -38,7 +38,7 @@ aliases:
 - /docker-hub/billing/faq/
 ---
 
-A Docker Core subscription includes licensing for commercial use of Docker components including Docker Desktop and Docker Hub.
+A Docker subscription includes licensing for commercial use of Docker components including Docker Desktop and Docker Hub.
 
 Use the resources here to decide what subscription you need, or manage an existing subscription.
 
