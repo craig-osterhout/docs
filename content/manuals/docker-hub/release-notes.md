@@ -15,6 +15,18 @@ known issues for each Docker Hub release.
 
 Take a look at the [Docker Public Roadmap](https://github.com/orgs/docker/projects/51/views/1?filterQuery=) to see what's coming next.
 
+## 2024-10-24
+
+### New
+
+ - You can view your Docker Hub [storage usage](./download-rate-limit.md#view-docker-hub-usage).
+
+## 2024-09-05
+
+### New
+
+ - You can view your Docker Hub [pull usage](./download-rate-limit.md#view-docker-hub-usage).
+
 ## 2024-03-23
 
 ### New

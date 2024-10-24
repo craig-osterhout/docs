@@ -27,23 +27,12 @@ exhibiting excessive data and storage consumption.
 
 ### View Docker Hub usage
 
-You can download a CSV file of your or your organization's Docker Hub usage. To
-download the file:
+In Docker Hub, you can view your pull and storage usage at [Docker Hub
+Usage](https://hub.docker.com/usage).
 
-1. Sign in to [Docker Hub](https://hub.docker.com).
-
-   If you want to download usage for all members of an organization, you must
-   sign in to an account that is an owner for that organization. Otherwise,
-   you can only view your own usage. 
-
-2. In Docker Hub, navigate to the [**Usage** page](https://hub.docker.com/usage).
-3. In the drop-down, select whether to download your personal data or
-   data for an organization.
-4. In **From** and **To**, select a date range for the data.
-5. Select **Send report to email** to have Docker email you a link to the data
-   file. Note that email processing time may vary.
-
-The file contains the following comma separated values.
+On the **Pulls** tab, you can select **Send report to email** to receive a CSV
+file of your pulls usage. The file contains the following comma separated
+values.
 
 | CSV column           | Definition                                                                                                                                                                                                                 | Usage guidance                                                                                                                                                                      |
 |----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
