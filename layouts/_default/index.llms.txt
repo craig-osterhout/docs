@@ -1,19 +1,27 @@
-{{- $pages := where site.RegularPages "Params.sitemap" "!=" false -}}
-{{- $sorted := sort $pages "RelPermalink" -}}
-{{- $grouped := $sorted.GroupBy "Section" -}}
-
 # Docker Documentation
-{{- range $grouped }}
 
-## {{ humanize .Key }}
-{{- range .Pages }}
-{{- template "pageItem" . }}
-{{- end }}
-{{- end -}}
+This file contains a concise overview.
+For complete documentation with all pages, see {{ site.BaseURL }}llms-full.txt
 
-{{- define "pageItem" }}
-{{- if and .Title .Permalink }}
-- [{{ .Title }}]({{ .Permalink }})
-  {{- with .Description }}: {{ chomp (replace . "\n" " ") }}{{- end }}
-{{- end }}
+## Documentation Sections
+{{- range site.Menus.main }}
+  {{- $section := site.GetPage .PageRef }}
+  {{- if $section }}
+    {{- $description := $section.Description | plainify | chomp }}
+
+### {{ $section.Title }}
+
+{{ $section.Permalink }}
+{{ if $description }}
+{{ $description }}
+{{ end }}
+    {{- $subsections := where $section.Pages "Params.sitemap" "ne" "false" }}
+    {{- range $subsections }}
+      {{- if .Permalink }}
+      {{- $subDescription := .Description | plainify | chomp }}
+- [{{ .Title }}]({{ .Permalink }}){{ if $subDescription }}: {{ $subDescription }}{{ end }}
+      {{- end }}
+    {{- end }}
+
+  {{- end }}
 {{- end }}

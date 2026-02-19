@@ -1,0 +1,25 @@
+{{- $pages := where site.RegularPages "Params.sitemap" "!=" false -}}
+{{- $sorted := sort $pages "RelPermalink" -}}
+{{- $grouped := $sorted.GroupBy "Section" -}}
+
+# Docker Documentation - Complete Reference
+
+This file contains the complete Docker documentation with full content from all pages.
+For a concise overview, see see {{ site.BaseURL }}llms.txt
+
+---
+
+{{- range $grouped }}
+
+# {{ humanize .Key }}
+{{- range .Pages }}
+{{- template "pageContent" . }}
+{{- end }}
+{{- end -}}
+
+{{- define "pageContent" }}
+{{- if and .Title .Permalink }}
+- [{{ .Title }}]({{ .Permalink }})
+  {{- with .Description }}: {{ chomp (replace . "\n" " ") }}{{- end }}
+{{- end }}
+{{- end }}
