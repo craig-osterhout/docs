@@ -17,7 +17,7 @@ To grant your CI workflows the ability to pull and push images to and from
 Docker Hub, you first need to create access tokens:
 
 - For a personal repository: Create a [Personal
-  AccessToken](../../../../security/access-tokens.md) with **Read & Write**
+  Access Token](../../../../security/access-tokens.md) with **Read & Write**
   permissions.
 
 - For an organization repository: Create an [Organization Access
@@ -30,8 +30,8 @@ Docker Hub, you first need to create access tokens:
 The same token can be used for all CI workflows under the account's namespace
 provided it has adequate permissions to all relevant Docker Hub repositories.
 
-Make sure to save the generated token in a safe location for use when setting up
-the CI workflows.
+Store the token securely in a password manager or your CI/CD platform's secrets
+manager. Never commit tokens to source code repositories.
 
 ## Step 2: Extract your Autobuilds configuration
 
@@ -69,9 +69,10 @@ Docker Hub web interface.
 
    - **Build Environment Variables**: User-defined variables injected as
      environment variables into your build. You need to add these to your
-     workflow. If the environment variables are secret, add them as secrets in
-     the CI service and change your build instructions to read the data from the
-     secrets. See your CI service documentation on how to handle secrets.
+     workflow. If the environment variables contain secrets, add them to your CI
+     service's secrets manager. Then update your Dockerfile or build scripts to
+     reference these secrets using your CI platform's syntax. See your CI
+     service documentation on how to handle secrets.
 
 ### Example configuration
 
