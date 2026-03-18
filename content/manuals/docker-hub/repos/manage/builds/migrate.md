@@ -6,8 +6,6 @@ linkTitle: Migrate
 weight: 80
 ---
 
-{{% include "autobuilds-deprecated.md" %}}
-
 This guide explains how to migrate your Docker Hub Autobuilds setup to
 Continuous Integration (CI) workflows, focusing on GitHub Actions and Bitbucket
 Pipelines as these are the built-in CI services for the two version control
