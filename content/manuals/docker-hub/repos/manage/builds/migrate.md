@@ -6,6 +6,8 @@ linkTitle: Migrate
 weight: 80
 ---
 
+{{% include "autobuilds-deprecated.md" %}}
+
 This guide explains how to migrate your Docker Hub Autobuilds setup to
 Continuous Integration (CI) workflows, focusing on GitHub Actions and Bitbucket
 Pipelines as these are the built-in CI services for the two version control
@@ -143,7 +145,7 @@ using one of the two provided workflows:
 
 If your source code repository is hosted on Bitbucket, see the [Docker
 test-autobuilds-bitbucket example
-repository](https://bitbucket.org/docker/test-autobuilds-bitbucket).
+repository](https://bitbucket.org/docker-io/autobuilds-pipeline).
 
 All files except the `bitbucket-pipelines.yml` file are for example purposes only.
 
@@ -161,7 +163,7 @@ The pipeline example contains three separate pipelines:
 ### Steps to migrate
 
 1. Follow the instructions in the [example repository
-   readme](https://bitbucket.org/docker/test-autobuilds-bitbucket) to configure
+   readme](https://bitbucket.org/docker-io/autobuilds-pipeline) to configure
    a Bitbucket Pipeline in your Bitbucket repository.
 
 2. Comments in the pipeline configuration explain what each part does and where
