@@ -101,7 +101,7 @@ Select the tab that matches your source code repository hosting platform.
 {{< tab name="GitHub Actions" >}}
 
 If your source code repository is hosted on GitHub, see the [Docker
-test-autobuilds example repository](https://github.com/docker/autobuilds-actions).
+Autobuilds example repository](https://github.com/docker/autobuilds-actions).
 
 All files except those under the `.github/workflows` directory are for example
 purposes only.
@@ -143,7 +143,7 @@ using one of the two provided workflows:
 {{< tab name="Bitbucket Pipelines" >}}
 
 If your source code repository is hosted on Bitbucket, see the [Docker
-test-autobuilds-bitbucket example
+Autobuilds Bitbucket example
 repository](https://bitbucket.org/docker-io/autobuilds-pipeline).
 
 All files except the `bitbucket-pipelines.yml` file are for example purposes only.
