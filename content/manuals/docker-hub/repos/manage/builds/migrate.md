@@ -101,7 +101,7 @@ Select the tab that matches your source code repository hosting platform.
 {{< tab name="GitHub Actions" >}}
 
 If your source code repository is hosted on GitHub, see the [Docker
-test-autobuilds example repository](https://github.com/docker/test-autobuilds).
+test-autobuilds example repository](https://github.com/docker/autobuilds-actions).
 
 All files except those under the `.github/workflows` directory are for example
 purposes only.
@@ -118,7 +118,7 @@ using one of the two provided workflows:
 ### Steps to migrate
 
 1. Follow the instructions in the [example repository
-   readme](https://github.com/docker/test-autobuilds) to configure a CI GitHub
+   readme](https://github.com/docker/autobuilds-actions) to configure a CI GitHub
    Action workflow in your GitHub repository.
 
 2. The workflows contain comments on what each step does and where changes
