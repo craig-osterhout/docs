@@ -120,10 +120,10 @@ Example output:
 > This is example output. Your results may vary depending on newly discovered
 > CVEs and image updates.
 
-Docker maintains near-zero CVEs in Docker Hardened Images. For DHI
-subscriptions, when new CVEs are discovered, the CVEs are remediated within
-the industry-leading SLA time frame. Learn more about the [SLA-backed security
-features](./features.md#sla-backed-security).
+Docker maintains near-zero CVEs in Docker Hardened Images. For DHI Select and
+Enterprise subscriptions, when new CVEs are discovered, the CVEs are remediated
+within the industry-leading SLA time frame. Learn more about the [SLA-backed
+security features](./features.md#sla-backed-security).
 
 This comparison shows that the Docker Hardened Image:
 
