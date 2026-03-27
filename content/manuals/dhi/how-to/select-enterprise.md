@@ -1,5 +1,5 @@
 ---
-title: 'Get started with DHI Select and Enterprise <span class="not-prose bg-blue-500 dark:bg-blue-400 rounded-sm px-1 text-xs text-white whitespace-nowrap">DHI Select & Enterprise</span>'
+title: Get started with DHI Select and Enterprise
 linkTitle: Use DHI Select & Enterprise
 description: Mirror a repository and start using Docker Hardened Images for Select and Enterprise subscriptions.
 keywords: docker hardened images, enterprise, select, mirror, quickstart
