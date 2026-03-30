@@ -150,9 +150,6 @@ column to monitor the build status.
 {{< /tab >}}
 {{< tab name="Command line" >}}
 
-{{< /tab >}}
-{{< tab name="Command line" >}}
-
 To use the following commands, you must authenticate or configure DHI CLI
 authentication using your Docker token. For details, see [Use the DHI
 CLI](cli.md#configuration).
