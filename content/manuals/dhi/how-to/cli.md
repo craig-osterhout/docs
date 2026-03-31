@@ -64,6 +64,10 @@ docker dhi catalog get <image-name>
 
 ### Mirror DHI images {tier="DHI Select & DHI Enterprise"}
 
+> [!NOTE]
+>
+> Only organization owners can perform mirroring operations.
+
 Start mirroring one or more DHI images to your Docker Hub organization:
 
 ```bash
@@ -109,9 +113,15 @@ docker dhi mirror stop dhi-golang --org my-org --delete --force
 
 ### Customize DHI images {tier="DHI Select & DHI Enterprise"}
 
+> [!NOTE]
+>
+> An organization owner must first [mirror](./mirror.md) the DHI repository to
+> your organization. Once mirrored, any user with access to the mirrored DHI
+> repository can create and manage customizations.
+
 The CLI can be used to create and manage DHI image customizations. For detailed
-instructions on creating customizations, including the YAML syntax and
-available options, see [Customize a Docker Hardened Image](./customize.md).
+instructions on creating customizations using the web interface,
+see [Customize a Docker Hardened Image](./customize.md).
 
 Quick reference for CLI commands:
 
