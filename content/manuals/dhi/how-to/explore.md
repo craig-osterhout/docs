@@ -122,7 +122,7 @@ The image variant details page provides the following information:
   are signed and can be verified using cosign. For a list of available
   attestations, see [Attestations](../core-concepts/attestations.md).
 
-## Compare images
+## Compare and evaluate images
 
 Docker Scout lets you analyze the differences between two images. Comparing a
 DHI to a standard image helps you understand the security improvements, package

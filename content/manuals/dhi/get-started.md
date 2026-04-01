@@ -131,7 +131,7 @@ This comparison shows that the Docker Hardened Image:
 - Reduces size: From 412 MB down to 35 MB (91% reduction)
 - Minimizes packages: From 610 packages down to 80 (87% reduction)
 
-To dive deeper into comparing images see [Search and evaluate Docker Hardened Images](./how-to/explore.md#compare-images).
+To dive deeper into comparing images see [Search and evaluate Docker Hardened Images](./how-to/explore.md#compare-and-evaluate-images).
 
 ## What's next
 
