@@ -55,8 +55,3 @@ To update settings:
 4. Select **Repositories** and then select the mirrored repository.
 5. Select the **Settings** tab.
 6. Uncheck the **Mirror end-of-life images** option.
-
-## Manage ELS repositories
-
-You can view and manage your mirrored repositories with ELS like any other
-mirrored DHI repository. For more details, see [Manage images](./manage.md).

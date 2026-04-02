@@ -45,10 +45,6 @@ params:
       description: Learn how to use Extended Lifecycle Support with Docker Hardened Images.
       icon: update
       link: /dhi/how-to/els/
-    - title: Manage Docker Hardened Images and charts
-      description: Learn how to manage your mirrored and customized Docker Hardened Images in your organization.
-      icon: reorder
-      link: /dhi/how-to/manage/
   grid_verify:
     - title: Verify a Docker Hardened Image or chart
       description: Use Docker Scout or cosign to verify signed attestations like SBOMs, provenance, and vulnerability data for Docker Hardened Images and charts.
