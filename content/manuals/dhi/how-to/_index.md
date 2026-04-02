@@ -2,6 +2,8 @@
 title: How-tos
 description: Step-by-step guidance for working with Docker Hardened Images, from discovery to debugging.
 weight: 20
+aliases:
+  - /dhi/how-to/manage/
 params:
   grid_discover:
     - title: Search and evaluate Docker Hardened Images
