@@ -178,6 +178,12 @@ To discover attestations with ORAS:
 1. [Generate an organization access
    token](../../enterprise/security/access-tokens.md) with **Read public
    repositories** scope.
+
+   The following example shows how to discover attestations on DHI community
+   images from `dhi.io`. If you're discovering attestations on images mirrored to
+   your organization, generate an OAT scoped to read from your mirrored repository
+   instead of **Read public repositories**.
+
 2. Sign in to `dhi.io` using your organization name as the username and the OAT
    as the password:
 
