@@ -154,9 +154,8 @@ repository.
 
 > [!NOTE]
 >
-> If you only want to stop mirroring ELS versions, you can clear the ELS
-> option in the mirrored repository's **Settings** tab by unchecking **Mirror
-> end-of-life images**.
+> If you only want to stop mirroring ELS versions, clear the **Mirror
+> end-of-life images** option in the mirrored repository's **Settings** tab.
 
  To stop mirroring a repository:
 
