@@ -171,20 +171,42 @@ your own third-party registry.
 
 ### Create an image pull secret
 
-To pull Docker Hardened Images in Kubernetes, create a secret using a Personal
-Access Token (PAT) or Organization Access Token (OAT). Ensure the token has at
-least read-only access to the repositories.
+You can create an image pull secret using either an access token or Docker Desktop credentials.
 
 For the `--docker-server` value:
 - Use `dhi.io` for community images pulled directly from Docker Hardened Images
 - Use `docker.io` for mirrored repositories on Docker Hub
 - Use your registry's hostname for third-party registries
 
+#### Using an access token
+
+Create a secret using a [Personal Access Token
+(PAT)](../../security/access-tokens.md) or [Organization Access Token
+(OAT)](../../enterprise/security/access-tokens.md). Ensure the token has at
+least read-only access to the repositories.
+
 ```console
 $ kubectl create -n <kubernetes namespace> secret docker-registry <secret name> --docker-server=<registry server> \
         --docker-username=<registry user> --docker-password=<access token> \
         --docker-email=<registry email>
 ```
+
+#### Using Docker Desktop credentials
+
+If you're already authenticated with Docker Desktop, you can create a secret
+using your stored credentials. This method works for registries you've
+authenticated to via Docker Desktop (using `docker login <registry>`).
+
+```console
+$ NS=<namespace>
+$ kubectl create -n ${NS} secret docker-registry dhi-pull-secret \
+    --docker-server=<registry server> \
+    --docker-username=<registry user> \
+    --docker-password="$(echo https://<registry server> | docker-credential-desktop get | jq -r .Secret)" \
+    --docker-email=<registry email>
+```
+
+This method extracts credentials from Docker Desktop's credential store, avoiding the need to create a separate access token for local development.
 
 ### Test the image pull secret
 
