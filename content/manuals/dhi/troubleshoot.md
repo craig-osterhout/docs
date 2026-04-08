@@ -91,7 +91,7 @@ production environments.
 You can use the image mount feature to mount debugging tools into your container
 without modifying the base image.
 
-##### Step 1: Run a container from a Hardened Image
+##### Step 1: Run a container from a hardened image
 
 Start with a DHI-based container that simulates an issue:
 
