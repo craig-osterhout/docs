@@ -1,0 +1,43 @@
+# This workflow warns and then closes issues and PRs that have had no activity for a specified amount of time.
+# For more information, see: https://github.com/actions/stale
+name: Mark stale issues and pull requests
+
+on:
+  schedule:
+    - cron: '30 1 * * *'  # Daily at 1:30 AM UTC
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/stale@v10
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          ascending: false
+          operations-per-run: 30
+          
+          # Exempt labels - issues/PRs with these labels will never be marked stale
+          exempt-issue-labels: 'kind/help wanted,status/need-more-info,status/needs-analysis'
+          exempt-pr-labels: 'kind/help wanted,status/need-more-info,status/needs-analysis'
+          
+          # Stale messages
+          stale-issue-message: "There hasn't been any activity on this issue for a long time. If the problem is still relevant, add a comment on this issue. If not, this issue will be closed in 14 days."
+          stale-pr-message: "Thanks for the PR. We'd like to make our product docs better, but haven't been able to review all the suggestions. As our docs change often and quickly diverge, we do not have the bandwidth to review and rebase old PRs. If the updates are still relevant, review our [contribution guidelines](https://docs.docker.com/contribute/overview/) and rebase your PR against the latest version of the docs. This helps our maintainers focus on the active issues. If there's no activity, this PR will be closed in 30 days."
+          
+          # Close messages
+          close-issue-message: "Closing this issue as there hasn't been any activity on this issue for a long time. If the problem is still relevant, open a new issue and complete the issue template so we can capture the details required to investigate the issue further. This also helps our maintainers focus on the active issues."
+          close-pr-message: "Closing this PR as there hasn't been any activity on this PR for a long time. If the updates are still relevant, review our [contribution guidelines](https://docs.docker.com/contribute/overview/) and create a new PR against the latest version of our docs."
+          
+          # Timing configuration
+          days-before-issue-stale: 180  # 6 months
+          days-before-pr-stale: 180     # 6 months
+          days-before-issue-close: 14   # 2 weeks after stale
+          days-before-pr-close: 30      # 1 month after stale
+          
+          # Debug mode - set to false when ready for production
+          # When true, no actual changes will be made (dry-run for testing)
+          debug-only: true
