@@ -110,8 +110,8 @@ docker dhi mirror stop dhi-golang --org my-org --delete --force
 ### Customize DHI images {tier="DHI Select & DHI Enterprise"}
 
 The CLI can be used to create and manage DHI image customizations. For detailed
-instructions on creating customizations, including the YAML syntax and
-available options, see [Customize a Docker Hardened Image](./customize.md).
+instructions on creating customizations using the GUI, see [Customize a Docker
+Hardened Image](./customize.md).
 
 The following is a quick reference for CLI commands. For complete details on all
 options and flags, see the
