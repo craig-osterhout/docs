@@ -193,7 +193,9 @@ jobs:
             
             If the updates are still relevant, please review our [contribution guidelines](https://docs.docker.com/contribute/overview/) and **create a new PR** against the latest version of our docs.
           
-          # Timing configuration
+          # Timing configuration NOTE: If you change days-before-issue-close or
+          # days-before-pr-close, also update the hardcoded values in the
+          # stale-issue-message and stale-pr-message above to match.
           days-before-issue-stale: 180  # 6 months
           days-before-pr-stale: 180     # 6 months
           days-before-issue-close: 14   # 2 weeks after stale
