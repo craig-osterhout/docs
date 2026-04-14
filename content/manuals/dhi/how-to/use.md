@@ -125,15 +125,25 @@ To discover attestations with ORAS:
    instead of **Read public repositories**.
 
 2. Sign in to `dhi.io` using your organization name as the username and the OAT
-   as the password:
+   as the password.
+
+   > [!WARNING]
+   >
+   > The following examples export credentials directly on the command line for
+   > demonstration purposes. This exposes sensitive tokens in your shell history
+   > and process list. In production environments, use secure methods such as
+   > reading from files with restricted permissions, environment files loaded
+   > at runtime, or secret management tools.
 
     ```console
     $ oras login dhi.io -u <YOUR_ORGANIZATION_NAME>
     ```
 
-   Or non-interactively in a CI/CD pipeline:
+   Or non-interactively in a CI/CD pipeline, set your organization name and token:
 
    ```console
+   $ export DOCKER_ORG="YOUR_ORGANIZATION_NAME"
+   $ export OAT="YOUR_ORGANIZATION_ACCESS_TOKEN"
    $ echo $OAT | oras login dhi.io -u "$DOCKER_ORG" --password-stdin
    ```
 
