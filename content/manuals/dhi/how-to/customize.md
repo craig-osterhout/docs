@@ -2,7 +2,7 @@
 title: Customize a Docker Hardened Image or chart
 linkTitle: Customize an image or chart
 weight: 25
-keywords: hardened images, DHI, customize, certificate, artifact, helm chart
+keywords: hardened images, DHI, customize, certificate, artifact, helm chart, terraform, infrastructure as code
 description: Learn how to customize Docker Hardened Images (DHI) and charts.
 ---
 
@@ -171,6 +171,50 @@ $ docker dhi customization delete my-org/dhi-golang "golang with git" --org my-o
 # Delete without confirmation prompt
 $ docker dhi customization delete my-org/dhi-golang "golang with git" --org my-org --yes
 ```
+
+{{< /tab >}}
+{{< tab name="Terraform" >}}
+
+You can manage DHI customizations as infrastructure-as-code using the [DHI
+Terraform
+provider](https://registry.terraform.io/providers/docker-hardened-images/dhi/latest/docs).
+If you haven't configured the provider yet, see the Terraform tab in [Mirror a
+repository](./mirror.md) for setup instructions.
+
+Define a `dhi_customization` resource for each customization:
+
+```hcl
+resource "dhi_customization" "golang_with_git" {
+  repository = "dhi-golang"
+  name       = "golang with git"
+
+  contents {
+    packages = ["git", "curl"]
+  }
+
+  platform {
+    os           = "linux"
+    architecture = "amd64"
+  }
+}
+```
+
+The `dhi_customization` resource also supports optional configuration blocks
+for `accounts`, `files`, `labels`, `annotations`, `environment`, `entrypoint`,
+`cmd`, `user`, `workdir`, and `stop_signal`.
+
+Run `terraform apply` to create the customization.
+
+To edit a customization, update the resource configuration and run `terraform
+apply`. To delete a customization, remove the resource and run `terraform apply`.
+
+For the full list of resource attributes, see the [Terraform Registry
+documentation](https://registry.terraform.io/providers/docker-hardened-images/dhi/latest/docs/resources/customization).
+
+> [!NOTE]
+>
+> Monitoring customization builds is not available through the Terraform
+> provider. Use the Docker Hub web interface or the DHI CLI to monitor builds.
 
 {{< /tab >}}
 {{< /tabs >}}

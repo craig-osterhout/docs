@@ -3,7 +3,7 @@ title: Mirror a Docker Hardened Image repository
 linktitle: Mirror a repository
 description: Learn how to mirror an image into your organization's namespace and optionally push it to another private registry.
 weight: 20
-keywords: mirror docker image, private container registry, docker hub automation, webhook image sync, secure image distribution, internal registry, jfrog artifactory, harbor registry, amazon ecr, google artifact registry, github container registry
+keywords: mirror docker image, private container registry, docker hub automation, webhook image sync, secure image distribution, internal registry, jfrog artifactory, harbor registry, amazon ecr, google artifact registry, github container registry, terraform, infrastructure as code
 ---
 
 {{< summary-bar feature_name="Docker Hardened Images" >}}
@@ -101,6 +101,67 @@ $ docker dhi mirror list --org my-org --type helm-chart
 ```
 
 {{< /tab >}}
+{{< tab name="Terraform" >}}
+
+You can manage DHI mirrors as infrastructure-as-code using the [DHI Terraform
+provider](https://registry.terraform.io/providers/docker-hardened-images/dhi/latest/docs).
+
+First, install and configure the provider:
+
+```hcl
+terraform {
+  required_providers {
+    dhi = {
+      source = "docker-hardened-images/dhi"
+    }
+  }
+}
+
+provider "dhi" {
+  docker_hub_username = var.docker_username
+  docker_hub_password = var.docker_password
+  organization        = var.org_name
+}
+```
+
+> [!NOTE]
+>
+> Instead of specifying credentials in the provider block, you can set the
+> `DOCKER_USERNAME`, `DOCKER_PASSWORD`, and `DHI_ORG` environment variables.
+
+Then, define a `dhi_mirror` resource for each repository you want to mirror:
+
+```hcl
+resource "dhi_mirror" "golang" {
+  source_namespace = "dhi"
+  source_name      = "golang"
+  destination_name = "dhi-golang"
+}
+
+resource "dhi_mirror" "nginx" {
+  source_namespace = "dhi"
+  source_name      = "nginx"
+  destination_name = "dhi-nginx"
+}
+```
+
+To enable Extended Lifecycle Support (ELS) variants, set the `els` attribute:
+
+```hcl
+resource "dhi_mirror" "golang" {
+  source_namespace = "dhi"
+  source_name      = "golang"
+  destination_name = "dhi-golang"
+  els              = true
+}
+```
+
+Run `terraform apply` to create the mirrors.
+
+For the full list of resource attributes, see the [Terraform Registry
+documentation](https://registry.terraform.io/providers/docker-hardened-images/dhi/latest/docs/resources/mirror).
+
+{{< /tab >}}
 {{< /tabs >}}
 
 After mirroring, the repository appears in your organization's repository list,
@@ -143,6 +204,13 @@ Use the [`docker dhi mirror`](/reference/cli/docker/dhi/mirror/) command:
 ```console
 $ docker dhi mirror stop --org my-org dhi-golang
 ```
+
+{{< /tab >}}
+{{< tab name="Terraform" >}}
+
+To stop mirroring, remove the `dhi_mirror` resource from your Terraform
+configuration and run `terraform apply`. The repository remains in your
+organization but no longer receives updates.
 
 {{< /tab >}}
 {{< /tabs >}}
