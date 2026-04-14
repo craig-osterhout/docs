@@ -162,8 +162,8 @@ jobs:
           operations-per-run: 30
           
           # Exempt labels - issues/PRs with these labels will never be marked stale
-          exempt-issue-labels: 'kind/help wanted,status/need-more-info,status/needs-analysis,lifecycle/frozen'
-          exempt-pr-labels: 'kind/help wanted,status/need-more-info,status/needs-analysis,lifecycle/frozen'
+          exempt-issue-labels: 'kind/help-wanted,status/need-more-info,status/needs-analysis,lifecycle/frozen'
+          exempt-pr-labels: 'kind/help-wanted,status/need-more-info,status/needs-analysis,lifecycle/frozen'
           
           # Use lifecycle/stale label to match existing convention
           stale-issue-label: 'lifecycle/stale'
