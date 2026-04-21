@@ -70,3 +70,9 @@ vulnerability scanners to suppress non-applicable CVEs. For detailed
 instructions on scanning with VEX support across different tools including
 Docker Scout, Trivy, and Grype, see [Scan Docker Hardened
 Images](/manuals/dhi/how-to/scan.md).
+
+> [!TIP]
+>
+> For a hands-on walkthrough of fetching the VEX attestation, reading its
+> structure, and filtering statements with `jq`, see [Explore VEX statements
+> in Docker Hardened Images](/guides/dhi-vex-walkthrough/).
