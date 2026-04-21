@@ -30,8 +30,6 @@ on Docker Hub. Once the repository is mirrored, any user with access to the
 mirrored DHI repository can create a customized image.
 
 You can create customizations using either the DHI CLI or the Docker Hub web interface.
-When creating a customization, you can select multiple images and versions to
-apply the same customization settings to all of them at once.
 
 {{< tabs >}}
 {{< tab name="Docker Hub" >}}
@@ -48,7 +46,10 @@ apply the same customization settings to all of them at once.
    customization process. You can continue with the following steps for more
    details.
 
-1. Select one or more images and versions you want to customize.
+1. Select one or more images or Helm charts and versions you want to customize.
+   You can select multiple images and versions (from the same distro), or
+   multiple Helm charts and versions, to apply the same customization to all of
+   them.
 1. Select **Next**.
 1. Optional. Add packages.
 
