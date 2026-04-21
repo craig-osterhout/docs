@@ -47,9 +47,9 @@ You can create customizations using either the DHI CLI or the Docker Hub web int
    details.
 
 1. Select one or more images or Helm charts and versions you want to customize.
-   You can select multiple images and versions (from the same distro), or
-   multiple Helm charts and versions, to apply the same customization to all of
-   them.
+   You can select multiple images and versions (from the same distribution and
+   distribution version), or multiple Helm charts and versions, to apply the
+   same customization to all of them.
 1. Select **Next**.
 1. Optional. Add packages.
 
