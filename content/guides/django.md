@@ -19,8 +19,11 @@ params:
 - You have installed the latest version of [Docker Desktop](/get-started/get-docker.md).
 - Python does not need to be installed on your local machine. You'll use a container to initialize the project.
 
-> **New to Docker?**  
-> Start with the [Docker basics](/get-started/docker-concepts/the-basics/what-is-a-container.md) guide to get familiar with key concepts like images, containers, and Dockerfiles.
+> [!TIP]
+>
+> If you're new to Docker, start with the [Docker
+> basics](/get-started/docker-concepts/the-basics/what-is-a-container.md) guide
+> to get familiar with key concepts like images, containers, and Dockerfiles.
 
 ---
 
@@ -132,7 +135,7 @@ When prompted, answer as follows:
 
 `docker init` generates a production-ready `Dockerfile` using the [Python Docker Official Image](https://hub.docker.com/_/python). No changes are needed to use it as-is.
 
-If you'd prefer a more secure, minimal base image, you can instead use a [Docker Hardened Image (DHI)](https://hub.docker.com/hardened-images/catalog/dhi/python). Docker Hardened Images are production-ready base images maintained by Docker that minimize attack surface and simplify compliance. For more details, see [Docker Hardened Images](/dhi/).
+If you'd prefer a more secure, minimal base image, you can instead use a [Docker Hardened Image (DHI)](https://hub.docker.com/hardened-images/catalog/dhi/python). Docker Hardened Images are production-ready base images maintained by Docker that minimize attack surface. For more details, see [Docker Hardened Images](/dhi/).
 
 {{< tabs >}}
 {{< tab name="Docker Official Image" >}}
@@ -154,53 +157,53 @@ DHI follows a multi-stage build pattern: a `-dev` image (which includes pip and 
 
 2. Replace the contents of your `Dockerfile` with the following:
 
-```dockerfile {title="Dockerfile"}
-# syntax=docker/dockerfile:1
-
-# Build stage: the -dev image includes pip and build tools needed to
-# install Python packages into a virtual environment.
-FROM dhi.io/python:3.12-alpine3.21-dev AS builder
-
-# Prevent Python from writing .pyc files to disk.
-ENV PYTHONDONTWRITEBYTECODE=1
-# Prevent Python from buffering stdout/stderr so logs appear immediately.
-ENV PYTHONUNBUFFERED=1
-# Activate the virtual environment for all subsequent RUN commands.
-ENV PATH="/app/venv/bin:$PATH"
-
-WORKDIR /app
-
-# Create a virtual environment so only the venv needs to be copied to
-# the runtime stage, not the full dev toolchain.
-RUN python -m venv /app/venv
-
-# Install dependencies into the virtual environment using a cache mount
-# to speed up subsequent builds.
-RUN --mount=type=cache,target=/root/.cache/pip \
-    --mount=type=bind,source=requirements.txt,target=requirements.txt \
-    pip install -r requirements.txt
-
-# Runtime stage: the minimal DHI image has no shell, no package manager,
-# and already runs as the nonroot user. No manual user setup required.
-FROM dhi.io/python:3.12-alpine3.21
-
-WORKDIR /app
-
-# Prevent Python from buffering stdout/stderr so logs appear immediately.
-ENV PYTHONUNBUFFERED=1
-# Activate the virtual environment copied from the build stage.
-ENV PATH="/app/venv/bin:$PATH"
-
-# Copy application source code and the pre-built virtual environment
-# from the builder stage.
-COPY . .
-COPY --from=builder /app/venv /app/venv
-
-EXPOSE 8000
-
-# Run Gunicorn as the production WSGI server.
-CMD ["gunicorn", "myapp.wsgi:application", "--bind", "0.0.0.0:8000"]
-```
+   ```dockerfile {title="Dockerfile"}
+   # syntax=docker/dockerfile:1
+   
+   # Build stage: the -dev image includes pip and build tools needed to
+   # install Python packages into a virtual environment.
+   FROM dhi.io/python:3.12-alpine3.21-dev AS builder
+   
+   # Prevent Python from writing .pyc files to disk.
+   ENV PYTHONDONTWRITEBYTECODE=1
+   # Prevent Python from buffering stdout/stderr so logs appear immediately.
+   ENV PYTHONUNBUFFERED=1
+   # Activate the virtual environment for all subsequent RUN commands.
+   ENV PATH="/app/venv/bin:$PATH"
+   
+   WORKDIR /app
+   
+   # Create a virtual environment so only the venv needs to be copied to
+   # the runtime stage, not the full dev toolchain.
+   RUN python -m venv /app/venv
+   
+   # Install dependencies into the virtual environment using a cache mount
+   # to speed up subsequent builds.
+   RUN --mount=type=cache,target=/root/.cache/pip \
+       --mount=type=bind,source=requirements.txt,target=requirements.txt \
+       pip install -r requirements.txt
+   
+   # Runtime stage: the minimal DHI image has no shell, no package manager,
+   # and already runs as the nonroot user. No manual user setup required.
+   FROM dhi.io/python:3.12-alpine3.21
+   
+   WORKDIR /app
+   
+   # Prevent Python from buffering stdout/stderr so logs appear immediately.
+   ENV PYTHONUNBUFFERED=1
+   # Activate the virtual environment copied from the build stage.
+   ENV PATH="/app/venv/bin:$PATH"
+   
+   # Copy application source code and the pre-built virtual environment
+   # from the builder stage.
+   COPY . .
+   COPY --from=builder /app/venv /app/venv
+   
+   EXPOSE 8000
+   
+   # Run Gunicorn as the production WSGI server.
+   CMD ["gunicorn", "myapp.wsgi:application", "--bind", "0.0.0.0:8000"]
+   ```
 
 {{< /tab >}}
 {{< /tabs >}}
@@ -361,7 +364,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      # Enable Django's debug mode for detailed error pages and auto-reload.
+      # Enable Django's verbose debug error pages (the dev server always auto-reloads).
       - DEBUG=1
       # Database connection settings passed to Django via environment variables.
       - POSTGRES_DB=myapp
@@ -470,10 +473,12 @@ $ docker run --rm \
 {{< /tab >}}
 {{< /tabs >}}
 
-Then update the `DATABASES` setting in `myapp/settings.py` to read from environment variables:
+Then update `myapp/settings.py` to read `DEBUG` and `DATABASES` from environment variables:
 
 ```python {title="myapp/settings.py"}
 import os
+
+DEBUG = os.environ.get('DEBUG', '0') == '1'
 
 DATABASES = {
     "default": {
