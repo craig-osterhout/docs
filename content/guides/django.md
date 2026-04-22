@@ -391,6 +391,7 @@ services:
         - action: rebuild
           path: requirements.txt
   db:
+    # Official image; use a Docker Hardened Image in production (hub.docker.com/hardened-images/catalog/dhi/postgres).
     image: postgres:17
     restart: always
     # Run as the postgres user rather than root.
