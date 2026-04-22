@@ -139,7 +139,7 @@ You can create customizations using either the DHI CLI or the Docker Hub web int
       customizing the `dhi-python:3.13` image, the customized image will be
       tagged as `dhi-python:3.13_custom`.
    1. Select the compression format for the image layers. You can choose
-      between gzip (default) or zstd compression.
+      between **GZIP** or **ZSTD** compression.
    1. Select the platforms you want to build the image for. You must select at
       least one platform.
 
