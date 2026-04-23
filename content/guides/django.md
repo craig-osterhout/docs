@@ -51,10 +51,10 @@ required.
 
 {{< tabs >}} {{< tab name="Local (uv)" >}}
 
-1. Initialize the project pinned to Python 3.12, then navigate into it:
+1. Initialize the project pinned to Python 3.14, then navigate into it:
 
    ```console
-   $ uv init --python 3.12 django-docker
+   $ uv init --python 3.14 django-docker
    $ cd django-docker
    ```
 
@@ -67,7 +67,7 @@ required.
 
 {{< /tab >}} {{< tab name="Container (DHI)" >}}
 
-The DHI dev image already has Python 3.12, so the bootstrapped project will
+The DHI dev image already has Python 3.14, so the bootstrapped project will
 match the Dockerfile exactly.
 
 1. Create the project directory and navigate into it:
@@ -81,8 +81,9 @@ match the Dockerfile exactly.
 
    ```console
    $ docker run --rm -v $PWD:$PWD -w $PWD \
-     dhi.io/python:3.12-alpine3.22-dev \
-     sh -c "pip install --quiet --root-user-action=ignore uv && export UV_LINK_MODE=copy && uv init --name django-docker --python 3.12 . && uv add django gunicorn && uv run django-admin startproject myapp ."
+     -e UV_LINK_MODE=copy \
+     dhi.io/python:3.14-alpine3.23-dev \
+     sh -c "pip install --quiet --root-user-action=ignore uv && uv init --name django-docker --python 3.14 . && uv add django gunicorn && uv run django-admin startproject myapp ."
    ```
 
    > [!NOTE]
@@ -140,7 +141,7 @@ Images](/dhi/).
    # syntax=docker/dockerfile:1
 
    # Build stage: the -dev image includes tools needed to install packages.
-   FROM dhi.io/python:3.12-alpine3.22-dev AS builder
+   FROM dhi.io/python:3.14-alpine3.23-dev AS builder
 
    # Prevent Python from writing .pyc files to disk.
    ENV PYTHONDONTWRITEBYTECODE=1
@@ -162,7 +163,7 @@ Images](/dhi/).
 
    # Runtime stage: minimal DHI image with no shell or package manager,
    # already runs as the nonroot user.
-   FROM dhi.io/python:3.12-alpine3.22
+   FROM dhi.io/python:3.14-alpine3.23
 
    # Prevent Python from buffering stdout/stderr so logs appear immediately.
    ENV PYTHONUNBUFFERED=1
@@ -222,7 +223,7 @@ stage alongside `production`:
 # syntax=docker/dockerfile:1
 
 # Build stage: the -dev image includes tools needed to install packages.
-FROM dhi.io/python:3.12-alpine3.22-dev AS builder
+FROM dhi.io/python:3.14-alpine3.23-dev AS builder
 
 # Prevent Python from writing .pyc files to disk.
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -254,7 +255,7 @@ CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
 # The production stage uses the minimal runtime image, which has no shell,
 # no package manager, and already runs as the nonroot user.
-FROM dhi.io/python:3.12-alpine3.22 AS production
+FROM dhi.io/python:3.14-alpine3.23 AS production
 
 # Prevent Python from buffering stdout/stderr so logs appear immediately.
 ENV PYTHONUNBUFFERED=1
@@ -365,8 +366,9 @@ $ uv add 'psycopg[binary]'
 
 ```console
 $ docker run --rm -v $PWD:$PWD -w $PWD \
-  dhi.io/python:3.12-alpine3.22-dev \
-  sh -c "pip install --quiet --root-user-action=ignore uv && UV_LINK_MODE=copy uv add 'psycopg[binary]'"
+  -e UV_LINK_MODE=copy \
+  dhi.io/python:3.14-alpine3.23-dev \
+  sh -c "pip install --quiet --root-user-action=ignore uv && uv add 'psycopg[binary]'"
 ```
 
 {{< /tab >}} {{< /tabs >}}
