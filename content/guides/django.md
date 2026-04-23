@@ -2,12 +2,12 @@
 title: Containerize a Django application
 linkTitle: Django
 description: Learn how to containerize a Django application using Docker.
-keywords: python, django, containerize, initialize, gunicorn, compose watch
+keywords: python, django, containerize, initialize, gunicorn, compose watch, uv
 summary: |
   This guide shows how to containerize a Django application using Docker.
-  You'll scaffold the project with a bind-mount container, create a
-  production-ready Dockerfile with docker init, then add a development
-  stage and Compose Watch for fast iteration.
+  You'll scaffold the project with uv, create a production-ready Dockerfile
+  using a Docker Hardened Image, then add a development stage and Compose Watch
+  for fast iteration.
 languages: [python]
 tags: [dhi]
 params:
@@ -16,8 +16,10 @@ params:
 
 ## Prerequisites
 
-- You have installed the latest version of [Docker Desktop](/get-started/get-docker.md).
-- Python does not need to be installed on your local machine. You'll use a container to initialize the project.
+- You have installed the latest version of [Docker
+  Desktop](/get-started/get-docker.md).
+- You have [uv](https://docs.astral.sh/uv/) installed, or you can use Docker to
+  scaffold the project without a local Python or uv installation.
 
 > [!TIP]
 >
@@ -29,125 +31,90 @@ params:
 
 ## Overview
 
-This guide walks you through containerizing a Django application with Docker. By the end, you will:
+This guide walks you through containerizing a Django application with Docker. By
+the end, you will:
 
-- Initialize a Django project using a container with a bind mount, with no local Python install required.
-- Create a production-ready Dockerfile using `docker init`.
-- Add a `development` stage to your Dockerfile and configure Compose Watch for automatic code syncing.
+- Initialize a Django project using uv, either locally or inside a Docker
+  Hardened Image container.
+- Create a production-ready Dockerfile using [Docker Hardened Images
+  (DHI)](/dhi/).
+- Add a `development` stage to your Dockerfile and configure Compose Watch for
+  automatic code syncing.
 
 ---
 
 ## Create the Django project
 
-Rather than cloning a sample application, you'll use a Python container with a bind mount to scaffold a new Django project directly on your local machine.
+You can bootstrap the project with a local uv installation, or entirely inside a
+container using the same DHI image the Dockerfile uses, with no local Python
+required.
 
-1. Create a new project directory and navigate to it:
+{{< tabs >}} {{< tab name="Local (uv)" >}}
 
-   ```console
-   $ mkdir django-docker-example && cd django-docker-example
-   ```
-
-2. Run a Python container with a bind mount to initialize the project. The `--mount` flag makes the generated files appear on your host machine:
-
-   {{< tabs >}}
-   {{< tab name="Mac / Linux" >}}
+1. Initialize the project pinned to Python 3.12, then navigate into it:
 
    ```console
-   $ docker run --rm \
-     --mount type=bind,src=.,target=/app \
-     -w /app \
-     python:3.12-slim \
-     sh -c "pip install --quiet django gunicorn && django-admin startproject myapp . && pip freeze > requirements.txt"
+   $ uv init --python 3.12 django-docker
+   $ cd django-docker
    ```
 
-   {{< /tab >}}
-   {{< tab name="PowerShell" >}}
-
-   ```powershell
-   $ docker run --rm `
-     --mount "type=bind,src=.,target=/app" `
-     -w /app `
-     python:3.12-slim `
-     sh -c "pip install --quiet django gunicorn && django-admin startproject myapp . && pip freeze > requirements.txt"
-   ```
-
-   {{< /tab >}}
-   {{< tab name="Command Prompt" >}}
+2. Add Django and Gunicorn, then scaffold the Django project:
 
    ```console
-   $ docker run --rm ^
-     --mount "type=bind,src=%cd%,target=/app" ^
-     -w /app ^
-     python:3.12-slim ^
-     sh -c "pip install --quiet django gunicorn && django-admin startproject myapp . && pip freeze > requirements.txt"
+   $ uv add django gunicorn
+   $ uv run django-admin startproject myapp .
    ```
 
-   {{< /tab >}}
-   {{< tab name="Git Bash" >}}
+{{< /tab >}} {{< tab name="Container (DHI)" >}}
+
+The DHI dev image already has Python 3.12, so the bootstrapped project will
+match the Dockerfile exactly.
+
+1. Create the project directory and navigate into it:
 
    ```console
-   $ docker run --rm \
-     --mount type=bind,src="./",target=/app \
-     -w //app \
-     python:3.12-slim \
-     sh -c "pip install --quiet django gunicorn && django-admin startproject myapp . && pip freeze > requirements.txt"
+   $ mkdir django-docker && cd django-docker
    ```
 
-   {{< /tab >}}
-   {{< /tabs >}}
+2. Initialize the project, add dependencies, and scaffold. All in one container
+   run:
 
-   This command installs Django and Gunicorn inside the container, scaffolds a new Django project in the current directory, and writes the installed packages to `requirements.txt`.
+   ```console
+   $ docker run --rm -v $PWD:$PWD -w $PWD \
+     dhi.io/python:3.12-alpine3.22-dev \
+     sh -c "pip install --quiet --root-user-action=ignore uv && export UV_LINK_MODE=copy && uv init --name django-docker --python 3.12 . && uv add django gunicorn && uv run django-admin startproject myapp ."
+   ```
+
+   > [!NOTE] The above command uses Mac/Linux shell syntax. On Windows, adjust
+   > the path: PowerShell uses `${PWD}`, Command Prompt uses `%cd%`, Git Bash
+   > requires `MSYS_NO_PATHCONV=1` with `$(pwd -W)`.
+
+{{< /tab >}} {{< /tabs >}}
 
 Your directory should now contain the following files:
 
 ```text
-├── django-docker-example/
-│ ├── manage.py
-│ ├── myapp/
-│ │ ├── __init__.py
-│ │ ├── asgi.py
-│ │ ├── settings.py
-│ │ ├── urls.py
-│ │ └── wsgi.py
-│ └── requirements.txt
+├── .python-version
+├── main.py
+├── manage.py
+├── myapp/
+│ ├── __init__.py
+│ ├── asgi.py
+│ ├── settings.py
+│ ├── urls.py
+│ └── wsgi.py
+├── pyproject.toml
+├── uv.lock
+└── README.md
 ```
 
 ---
 
 ## Create a production Dockerfile
 
-Use `docker init` to generate a production-ready `Dockerfile`, `.dockerignore`, and `compose.yaml`.
-
-Inside the `django-docker-example` directory, run:
-
-```console
-$ docker init
-```
-
-When prompted, answer as follows:
-
-| Question | Answer |
-|---|---|
-| What application platform does your project use? | Python |
-| What version of Python do you want to use? | 3.12 |
-| What port do you want your app to listen on? | 8000 |
-| What is the command to run your app? | `gunicorn myapp.wsgi:application --bind 0.0.0.0:8000` |
-
-`docker init` generates a production-ready `Dockerfile` using the [Python Docker Official Image](https://hub.docker.com/_/python). No changes are needed to use it as-is.
-
-If you'd prefer a more secure, minimal base image, you can instead use a [Docker Hardened Image (DHI)](https://hub.docker.com/hardened-images/catalog/dhi/python). Docker Hardened Images are production-ready base images maintained by Docker that minimize attack surface. For more details, see [Docker Hardened Images](/dhi/).
-
-{{< tabs >}}
-{{< tab name="Docker Official Image" >}}
-
-The `Dockerfile` generated by `docker init` is ready to use. It already sets up a non-privileged user, uses a cache mount to speed up `pip` installs, and runs Gunicorn as the production server. No further edits are needed.
-
-{{< /tab >}}
-{{< tab name="Docker Hardened Image" >}}
-
-Docker Hardened Images for Python are available in the [DHI catalog](https://hub.docker.com/hardened-images/catalog/dhi/python) and are freely available to all Docker users.
-
-DHI follows a multi-stage build pattern: a `-dev` image (which includes pip and build tools) is used to install dependencies into a virtual environment, and then a minimal runtime image (no `-dev`) is used for the final stage. The runtime image has no shell, no package manager, and already runs as the `nonroot` user, so no manual user setup is needed.
+Docker Hardened Images are production-ready base images maintained by Docker
+that minimize attack surface. For more details, see [Docker Hardened
+Images](/dhi/).
 
 1. Sign in to the DHI registry:
 
@@ -155,68 +122,83 @@ DHI follows a multi-stage build pattern: a `-dev` image (which includes pip and 
    $ docker login dhi.io
    ```
 
-2. Replace the contents of your `Dockerfile` with the following:
+2. Create a `.dockerignore` file to exclude local artifacts from the build
+   context:
+
+   ```text {title=".dockerignore"}
+   .venv/
+   __pycache__/
+   *.pyc
+   .git/
+   ```
+
+3. Create a `Dockerfile` with the following contents:
 
    ```dockerfile {title="Dockerfile"}
    # syntax=docker/dockerfile:1
-   
-   # Build stage: the -dev image includes pip and build tools needed to
-   # install Python packages into a virtual environment.
-   FROM dhi.io/python:3.12-alpine3.21-dev AS builder
-   
+
+   # Build stage: the -dev image includes tools needed to install packages.
+   FROM dhi.io/python:3.12-alpine3.22-dev AS builder
+
    # Prevent Python from writing .pyc files to disk.
    ENV PYTHONDONTWRITEBYTECODE=1
    # Prevent Python from buffering stdout/stderr so logs appear immediately.
    ENV PYTHONUNBUFFERED=1
-   # Activate the virtual environment for all subsequent RUN commands.
-   ENV PATH="/app/venv/bin:$PATH"
-   
+
+   RUN pip install --quiet --root-user-action=ignore uv
+   # Use copy mode since the cache and build filesystem are on different volumes.
+   ENV UV_LINK_MODE=copy
+
    WORKDIR /app
-   
-   # Create a virtual environment so only the venv needs to be copied to
-   # the runtime stage, not the full dev toolchain.
-   RUN python -m venv /app/venv
-   
-   # Install dependencies into the virtual environment using a cache mount
-   # to speed up subsequent builds.
-   RUN --mount=type=cache,target=/root/.cache/pip \
-       --mount=type=bind,source=requirements.txt,target=requirements.txt \
-       pip install -r requirements.txt
-   
-   # Runtime stage: the minimal DHI image has no shell, no package manager,
-   # and already runs as the nonroot user. No manual user setup required.
-   FROM dhi.io/python:3.12-alpine3.21
-   
-   WORKDIR /app
-   
+
+   # Install dependencies into a virtual environment using cache and bind mounts
+   # so neither uv nor the lock files need to be copied into the image.
+   RUN --mount=type=cache,target=/root/.cache/uv \
+       --mount=type=bind,source=uv.lock,target=uv.lock \
+       --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+       uv sync --frozen --no-install-project
+
+   # Runtime stage: minimal DHI image with no shell or package manager,
+   # already runs as the nonroot user.
+   FROM dhi.io/python:3.12-alpine3.22
+
    # Prevent Python from buffering stdout/stderr so logs appear immediately.
    ENV PYTHONUNBUFFERED=1
    # Activate the virtual environment copied from the build stage.
-   ENV PATH="/app/venv/bin:$PATH"
-   
-   # Copy application source code and the pre-built virtual environment
-   # from the builder stage.
+   ENV PATH="/app/.venv/bin:$PATH"
+
+   WORKDIR /app
+
+   # Copy the pre-built virtual environment and application source code.
+   COPY --from=builder /app/.venv /app/.venv
    COPY . .
-   COPY --from=builder /app/venv /app/venv
-   
+
    EXPOSE 8000
-   
+
    # Run Gunicorn as the production WSGI server.
    CMD ["gunicorn", "myapp.wsgi:application", "--bind", "0.0.0.0:8000"]
    ```
 
-{{< /tab >}}
-{{< /tabs >}}
+4. Create a `compose.yaml` file:
+
+   ```yaml {title="compose.yaml"}
+   services:
+     web:
+       build: .
+       ports:
+         - "8000:8000"
+   ```
 
 ### Run the application
 
-From the `django-docker-example` directory, run:
+From the `django-docker` directory, run:
 
 ```console
 $ docker compose up --build
 ```
 
-Open a browser and navigate to [http://localhost:8000](http://localhost:8000). You should see the Django welcome page.
+Open a browser and navigate to [http://localhost:8000](http://localhost:8000).
+You should see the Django welcome page.
 
 Press `ctrl`+`c` to stop the application.
 
@@ -224,122 +206,64 @@ Press `ctrl`+`c` to stop the application.
 
 ## Set up a development environment
 
-The production setup uses Gunicorn and requires a full image rebuild to pick up code changes. For development, you can add a `development` stage to your Dockerfile that uses Django's built-in server, and configure Compose Watch to automatically sync code changes into the running container without a rebuild.
+The production setup uses Gunicorn and requires a full image rebuild to pick up
+code changes. For development, you can add a `development` stage to your
+Dockerfile that uses Django's built-in server, and configure Compose Watch to
+automatically sync code changes into the running container without a rebuild.
 
 ### Update the Dockerfile
 
-Replace your `Dockerfile` with a multi-stage version that adds a `development` stage alongside `production`. Select the tab that matches your base image choice from the previous section:
-
-{{< tabs >}}
-{{< tab name="Docker Official Image" >}}
-
-A shared `base` stage installs dependencies, then branches into a `development` stage and a `production` stage:
+Replace your `Dockerfile` with a multi-stage version that adds a `development`
+stage alongside `production`:
 
 ```dockerfile {title="Dockerfile"}
 # syntax=docker/dockerfile:1
 
-ARG PYTHON_VERSION=3.12
-# The base stage is shared by both development and production. It installs
-# dependencies once so both stages benefit from the same layer cache.
-FROM python:${PYTHON_VERSION}-slim AS base
+# Build stage: the -dev image includes tools needed to install packages.
+FROM dhi.io/python:3.12-alpine3.22-dev AS builder
 
 # Prevent Python from writing .pyc files to disk.
 ENV PYTHONDONTWRITEBYTECODE=1
 # Prevent Python from buffering stdout/stderr so logs appear immediately.
 ENV PYTHONUNBUFFERED=1
 
-WORKDIR /app
-
-# Create a non-privileged user to run the application.
-# See https://docs.docker.com/go/dockerfile-user-best-practices/
-ARG UID=10001
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid "${UID}" \
-    appuser
-
-# Install dependencies using a cache mount to speed up subsequent builds and
-# a bind mount so requirements.txt doesn't need to be copied into the image.
-RUN --mount=type=cache,target=/root/.cache/pip \
-    --mount=type=bind,source=requirements.txt,target=requirements.txt \
-    python -m pip install -r requirements.txt
-
-# Copy application source code into the image.
-COPY . .
-
-# The development stage uses Django's built-in server, which reloads
-# automatically when Compose Watch syncs source file changes into the container.
-FROM base AS development
-USER appuser
-EXPOSE 8000
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-
-# The production stage uses Gunicorn, a production-grade WSGI server.
-FROM base AS production
-USER appuser
-EXPOSE 8000
-CMD ["gunicorn", "myapp.wsgi:application", "--bind", "0.0.0.0:8000"]
-```
-
-{{< /tab >}}
-{{< tab name="Docker Hardened Image" >}}
-
-The `development` stage extends directly from `builder`, inheriting the `-dev` image, the virtual environment, and the application code. The `production` stage uses the minimal runtime image as before:
-
-```dockerfile {title="Dockerfile"}
-# syntax=docker/dockerfile:1
-
-# Build stage: the -dev image includes pip and build tools needed to
-# install Python packages into a virtual environment.
-FROM dhi.io/python:3.12-alpine3.21-dev AS builder
-
-# Prevent Python from writing .pyc files to disk.
-ENV PYTHONDONTWRITEBYTECODE=1
-# Prevent Python from buffering stdout/stderr so logs appear immediately.
-ENV PYTHONUNBUFFERED=1
-# Activate the virtual environment for all subsequent RUN commands.
-ENV PATH="/app/venv/bin:$PATH"
+RUN pip install --quiet --root-user-action=ignore uv
+# Use copy mode since the cache and build filesystem are on different volumes.
+ENV UV_LINK_MODE=copy
 
 WORKDIR /app
 
-# Create a virtual environment so only the venv needs to be copied to
-# the runtime stage, not the full dev toolchain.
-RUN python -m venv /app/venv
+# Install dependencies into a virtual environment using cache and bind mounts
+# so neither uv nor the lock files need to be copied into the image.
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    uv sync --frozen --no-install-project
 
-# Install dependencies into the virtual environment using a cache mount
-# to speed up subsequent builds.
-RUN --mount=type=cache,target=/root/.cache/pip \
-    --mount=type=bind,source=requirements.txt,target=requirements.txt \
-    pip install -r requirements.txt
-
-# Copy application source code into the image.
-COPY . .
-
-# The development stage inherits the -dev image and virtual environment
-# from the builder, and runs Django's built-in server which reloads
-# when Compose Watch syncs source file changes into the container.
+# The development stage inherits the -dev image and virtual environment from
+# the builder. Django's built-in server reloads when Compose Watch syncs files.
 FROM builder AS development
+
+ENV PATH="/app/.venv/bin:$PATH"
+
+COPY . .
+EXPOSE 8000
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
 # The production stage uses the minimal runtime image, which has no shell,
 # no package manager, and already runs as the nonroot user.
-FROM dhi.io/python:3.12-alpine3.21 AS production
-
-WORKDIR /app
+FROM dhi.io/python:3.12-alpine3.22 AS production
 
 # Prevent Python from buffering stdout/stderr so logs appear immediately.
 ENV PYTHONUNBUFFERED=1
 # Activate the virtual environment copied from the build stage.
-ENV PATH="/app/venv/bin:$PATH"
+ENV PATH="/app/.venv/bin:$PATH"
 
-# Copy only the application code and the pre-built virtual environment
-# from the builder stage.
+WORKDIR /app
+
+# Copy only the pre-built virtual environment and application source code.
+COPY --from=builder /app/.venv /app/.venv
 COPY . .
-COPY --from=builder /app/venv /app/venv
 
 EXPOSE 8000
 
@@ -347,12 +271,10 @@ EXPOSE 8000
 CMD ["gunicorn", "myapp.wsgi:application", "--bind", "0.0.0.0:8000"]
 ```
 
-{{< /tab >}}
-{{< /tabs >}}
-
 ### Update the Compose file
 
-Replace your `compose.yaml` with the following. It targets the `development` stage, adds a PostgreSQL database, and configures Compose Watch:
+Replace your `compose.yaml` with the following. It targets the `development`
+stage, adds a PostgreSQL database, and configures Compose Watch:
 
 ```yaml {title="compose.yaml"}
 services:
@@ -387,18 +309,18 @@ services:
             - __pycache__/
             - "*.pyc"
             - .git/
+            - .venv/
         # Rebuild the image when dependencies change.
         - action: rebuild
-          path: requirements.txt
+          path: pyproject.toml
+        - action: rebuild
+          path: uv.lock
   db:
-    # Official image; use a Docker Hardened Image in production (hub.docker.com/hardened-images/catalog/dhi/postgres).
-    image: postgres:17
+    image: dhi.io/postgres:18
     restart: always
-    # Run as the postgres user rather than root.
-    user: postgres
     volumes:
       # Persist database data across container restarts.
-      - db-data:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql
     environment:
       - POSTGRES_DB=myapp
       - POSTGRES_USER=postgres
@@ -418,63 +340,35 @@ volumes:
   db-data:
 ```
 
-The `sync` action pushes file changes directly into the running container so Django's dev server reloads them automatically. A change to `requirements.txt` triggers a full image rebuild instead.
+The `sync` action pushes file changes directly into the running container so
+Django's dev server reloads them automatically. A change to `pyproject.toml` or
+`uv.lock` triggers a full image rebuild instead.
 
-> [!NOTE]
-> To learn more about Compose Watch, see [Use Compose Watch](/manuals/compose/how-tos/file-watch.md).
+> [!NOTE] To learn more about Compose Watch, see [Use Compose
+> Watch](/manuals/compose/how-tos/file-watch.md).
 
 ### Add the PostgreSQL driver
 
-Add the `psycopg` adapter to your project using a bind-mount container, the same approach you used to initialize the project:
+Add the `psycopg` adapter to your project:
 
-{{< tabs >}}
-{{< tab name="Mac / Linux" >}}
-
-```console
-$ docker run --rm \
-  --mount type=bind,src=.,target=/app \
-  -w /app \
-  python:3.12-slim \
-  sh -c "pip install --quiet -r requirements.txt 'psycopg[binary]' && pip freeze > requirements.txt"
-```
-
-{{< /tab >}}
-{{< tab name="PowerShell" >}}
-
-```powershell
-$ docker run --rm `
-  --mount "type=bind,src=.,target=/app" `
-  -w /app `
-  python:3.12-slim `
-  sh -c "pip install --quiet -r requirements.txt 'psycopg[binary]' && pip freeze > requirements.txt"
-```
-
-{{< /tab >}}
-{{< tab name="Command Prompt" >}}
+{{< tabs >}} {{< tab name="Local (uv)" >}}
 
 ```console
-$ docker run --rm ^
-  --mount "type=bind,src=%cd%,target=/app" ^
-  -w /app ^
-  python:3.12-slim ^
-  sh -c "pip install --quiet -r requirements.txt 'psycopg[binary]' && pip freeze > requirements.txt"
+$ uv add 'psycopg[binary]'
 ```
 
-{{< /tab >}}
-{{< tab name="Git Bash" >}}
+{{< /tab >}} {{< tab name="Container (DHI)" >}}
 
 ```console
-$ docker run --rm \
-  --mount type=bind,src="./",target=/app \
-  -w //app \
-  python:3.12-slim \
-  sh -c "pip install --quiet -r requirements.txt 'psycopg[binary]' && pip freeze > requirements.txt"
+$ docker run --rm -v $PWD:$PWD -w $PWD \
+  dhi.io/python:3.12-alpine3.22-dev \
+  sh -c "pip install --quiet --root-user-action=ignore uv && UV_LINK_MODE=copy uv add 'psycopg[binary]'"
 ```
 
-{{< /tab >}}
-{{< /tabs >}}
+{{< /tab >}} {{< /tabs >}}
 
-Then update `myapp/settings.py` to read `DEBUG` and `DATABASES` from environment variables:
+Then update `myapp/settings.py` to read `DEBUG` and `DATABASES` from environment
+variables:
 
 ```python {title="myapp/settings.py"}
 import os
@@ -503,7 +397,10 @@ $ docker compose watch
 
 Open a browser and navigate to [http://localhost:8000](http://localhost:8000).
 
-Try editing a file, for example add a view to `myapp/views.py`. Compose Watch syncs the change into the container and Django's dev server reloads automatically. If you add a package to `requirements.txt`, Compose Watch triggers a full image rebuild.
+Try editing a file, for example add a view to `myapp/views.py`. Compose Watch
+syncs the change into the container and Django's dev server reloads
+automatically. If you update `pyproject.toml` or `uv.lock`, Compose Watch
+triggers a full image rebuild.
 
 Press `ctrl`+`c` to stop.
 
@@ -513,9 +410,12 @@ Press `ctrl`+`c` to stop.
 
 In this guide, you:
 
-- Bootstrapped a Django project using a Docker container and a bind mount, with no local Python installation required.
-- Used `docker init` to generate Docker assets and updated the `Dockerfile` to use Gunicorn for production.
-- Added a `development` stage to the `Dockerfile` and configured Compose Watch for fast iterative development with a PostgreSQL database.
+- Bootstrapped a Django project using uv, with options for both local and
+  containerized setup.
+- Created a production-ready Dockerfile using Docker Hardened Images and uv for
+  dependency management.
+- Added a `development` stage to the `Dockerfile` and configured Compose Watch
+  for fast iterative development with a PostgreSQL database.
 
 Related information:
 
@@ -524,3 +424,4 @@ Related information:
 - [Use Compose Watch](/manuals/compose/how-tos/file-watch.md)
 - [Docker Hardened Images](/dhi/)
 - [Multi-stage builds](/manuals/build/building/multi-stage.md)
+- [uv documentation](https://docs.astral.sh/uv/)
