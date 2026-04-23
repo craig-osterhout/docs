@@ -85,7 +85,9 @@ match the Dockerfile exactly.
      sh -c "pip install --quiet --root-user-action=ignore uv && export UV_LINK_MODE=copy && uv init --name django-docker --python 3.12 . && uv add django gunicorn && uv run django-admin startproject myapp ."
    ```
 
-   > [!NOTE] The above command uses Mac/Linux shell syntax. On Windows, adjust
+   > [!NOTE]
+   >
+   > The above command uses Mac/Linux shell syntax. On Windows, adjust
    > the path: PowerShell uses `${PWD}`, Command Prompt uses `%cd%`, Git Bash
    > requires `MSYS_NO_PATHCONV=1` with `$(pwd -W)`.
 
@@ -344,7 +346,9 @@ The `sync` action pushes file changes directly into the running container so
 Django's dev server reloads them automatically. A change to `pyproject.toml` or
 `uv.lock` triggers a full image rebuild instead.
 
-> [!NOTE] To learn more about Compose Watch, see [Use Compose
+> [!NOTE]
+>
+> To learn more about Compose Watch, see [Use Compose
 > Watch](/manuals/compose/how-tos/file-watch.md).
 
 ### Add the PostgreSQL driver
