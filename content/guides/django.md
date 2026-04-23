@@ -87,7 +87,7 @@ match the Dockerfile exactly.
 
    > [!NOTE]
    >
-   > The above command uses Mac/Linux shell syntax. On Windows, adjust
+   > The previous command uses Mac/Linux shell syntax. On Windows, adjust
    > the path: PowerShell uses `${PWD}`, Command Prompt uses `%cd%`, Git Bash
    > requires `MSYS_NO_PATHCONV=1` with `$(pwd -W)`.
 
