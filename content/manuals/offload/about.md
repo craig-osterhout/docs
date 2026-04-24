@@ -94,8 +94,7 @@ Here's how session management works:
 
 ## Fair use
 
-Docker Offload is subject to a fair use policy to ensure fair resource usage and
-maintain service quality for all users. Fair use is defined as up to 8
+Docker Offload enforces a fair use policy to prevent resource abuse. Fair use is defined as up to 8
 compute hours per named user per day. Usage in excess of this threshold may be
 subject to session management at Docker's discretion.
 
