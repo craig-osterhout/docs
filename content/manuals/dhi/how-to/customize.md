@@ -165,12 +165,17 @@ permissions. [Organization access tokens
 Use the [`docker dhi customization`](/reference/cli/docker/dhi/customization/) command:
 
 ```console
-# Prepare a customization scaffold
+# Prepare a single customization scaffold
 $ docker dhi customization prepare golang 1.25 \
   --org my-org \
   --destination my-org/dhi-golang \
   --name "golang with git" \
-  --output my-customization.yaml
+  > my-customization.yaml
+
+# Prepare a bulk customization scaffold (pipe JSON array via stdin)
+$ echo '[{"destination":"my-org/dhi-golang","tag-definition-id":"golang/alpine-3.23/1.24-dev"}]' \
+  | docker dhi customization prepare --name "golang with git" --org my-org \
+  > my-customization.yaml
 
 # Create a customization
 $ docker dhi customization create my-customization.yaml --org my-org
@@ -183,17 +188,17 @@ $ docker dhi customization list --org my-org --filter git
 $ docker dhi customization list --org my-org --repo dhi-golang
 $ docker dhi customization list --org my-org --source golang
 
-# Get a customization
-$ docker dhi customization get my-org/dhi-golang "golang with git" --org my-org --output my-customization.yaml
+# Get a customization by ID
+$ docker dhi customization get <id> --org my-org
 
 # Update a customization
 $ docker dhi customization edit my-customization.yaml --org my-org
 
-# Delete a customization
-$ docker dhi customization delete my-org/dhi-golang "golang with git" --org my-org
+# Delete a customization by ID
+$ docker dhi customization delete <id> --org my-org
 
 # Delete without confirmation prompt
-$ docker dhi customization delete my-org/dhi-golang "golang with git" --org my-org --yes
+$ docker dhi customization delete <id> --org my-org --force
 ```
 
 {{< /tab >}}
