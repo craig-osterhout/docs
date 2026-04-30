@@ -241,7 +241,7 @@ $ docker dhi catalog list --json
 $ docker dhi catalog get golang --json
 $ docker dhi attestation list dhi/nginx:1.27 --json
 $ docker dhi mirror list --org my-org --json
-$ docker dhi mirror start --org my-org golang --json
+$ docker dhi mirror start --org my-org dhi/golang,my-org/dhi-golang --json
 $ docker dhi customization list --org my-org --json
 $ docker dhi customization build list my-org/dhi-golang "golang with git" --org my-org --json
 ```
