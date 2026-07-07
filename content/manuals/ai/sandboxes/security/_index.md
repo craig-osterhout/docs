@@ -82,9 +82,9 @@ check them separately. See
 for the alternative clone-mode boundary.
 
 The default allowed domains include broad wildcards. Some defaults like
-`*.googleapis.com` cover many services beyond AI APIs. Run `sbx policy ls` to
-see the full list of active rules, and remove entries you don't need. See
-[Default security posture](defaults/).
+`*.googleapis.com` cover many services beyond AI APIs. Run `sbx policy ls
+--wide` to see the full list of active rules, and remove entries you don't
+need. See [Default security posture](defaults/).
 
 Kits run install commands with root privileges inside the sandbox. To limit
 supply-chain risk, `sbx` restricts kit installs to an allowlist of sources

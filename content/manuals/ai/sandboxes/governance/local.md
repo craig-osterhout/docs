@@ -17,7 +17,7 @@ Local rules apply only when your organization doesn't enforce governance:
 - **Org governance active**: the organization policy replaces local policy.
   Local rules are inactive, and `sbx policy allow` and `sbx policy deny` have
   no effect. To list the inactive local rules, run
-  `sbx policy ls --include-inactive`. See
+  `sbx policy ls --wide --include-inactive`. See
   [Monitoring](monitoring.md#showing-inactive-rules).
 
 See [Organization policy](org.md) for how organization governance works.
@@ -54,7 +54,7 @@ Choose a default network policy:
 | Locked Down | All outbound traffic is blocked, including model provider APIs (for example, `api.anthropic.com`). You must explicitly allow everything you need. |
 
 The **Balanced** preset's baseline allowlist is a good starting point for most
-workflows. Run `sbx policy ls` to see exactly which rules it includes.
+workflows. Run `sbx policy ls --wide` to see exactly which rules it includes.
 
 > [!NOTE]
 > If your organization manages sandbox policies centrally, organization rules
@@ -98,7 +98,8 @@ Specify multiple hosts in one command with a comma-separated list:
 $ sbx policy allow network "api.anthropic.com,*.npmjs.org,*.pypi.org"
 ```
 
-Remove a rule by resource or by rule ID:
+Remove a rule by resource or by rule ID. Use `sbx policy ls --wide` (or
+`--json`) to find the ID or resource value first:
 
 ```console
 $ sbx policy rm network --resource ads.example.com
@@ -111,8 +112,9 @@ To remove a sandbox-scoped rule, pass `--sandbox <name>`:
 $ sbx policy rm network --sandbox my-sandbox --resource api.example.com
 ```
 
-To inspect which rules are active and where they come from, use
-`sbx policy ls`. See [Monitoring](monitoring.md).
+To inspect which policies are active and where they come from, use
+`sbx policy ls`, or `sbx policy inspect <policy-or-rule>` for full detail on
+one policy or rule. See [Monitoring](monitoring.md).
 
 ### Resetting
 
@@ -138,12 +140,11 @@ $ sbx policy reset --force
 
 If rules you add with `sbx policy allow` or `sbx policy deny` don't change
 sandbox behavior, your organization likely has governance enabled. Run `sbx
-policy ls` to check: if the output starts with a `Policy rules` header listing a
-`Governance  Managed by <org>` line, org governance is active. When it's active,
-the organization policy replaces local policy, so your rules have no effect.
-They're hidden from `sbx policy ls` by default; run `sbx policy ls
---include-inactive` to see them with an `inactive` status in the `STATUS`
-column.
+policy ls` to check: if the output starts with a `Governance: Managed by
+<org>` line, org governance is active. When it's active, the organization
+policy replaces local policy, so your rules have no effect. They're hidden
+from `sbx policy ls` by default; run `sbx policy ls --wide --include-inactive`
+to see them with an `inactive` status in the `STATUS` column.
 
 Organization policy can't be supplemented from your machine. To change what
 your sandboxes can access, ask your admin to update the organization policy in
@@ -154,8 +155,7 @@ the Admin Console.
 If a domain remains blocked after you add a local allow rule, your organization
 likely enforces governance, which makes local rules inactive. Run `sbx policy
 ls` to check whether org governance is active; if the output starts with a
-`Policy rules` header listing a `Governance  Managed by <org>` line, it is. Add
-`--include-inactive` to confirm your rule shows an `inactive` status. If so, the
-block can only be
+`Governance: Managed by <org>` line, it is. Add `--wide --include-inactive` to
+confirm your rule shows an `inactive` status. If so, the block can only be
 lifted by updating the org policy in the Admin Console or via the
 [API](/reference/api/ai-governance/).
