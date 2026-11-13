@@ -33,10 +33,9 @@ with the **Governance** permissions.
    choose the teams the policy applies to. For more details, see
    [Scope policies to teams](#scope-policies-to-teams).
 1. Define the policy rules.
-   - Network and filesystem policies: select **Add rule** for each rule. For a
-     network policy, see
+   - Network policies: see
      [What a network rule can match](network.md#what-a-network-rule-can-match).
-     For a filesystem policy, see
+   - Filesystem policies: see
      [Filesystem mount rule syntax](../../reference/filesystem-rules.md).
    - MCP policies: enter Cedar statements in the policy editor. For more
      details, see [Organization MCP access policies](mcp.md).
